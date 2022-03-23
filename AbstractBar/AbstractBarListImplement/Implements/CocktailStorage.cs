@@ -34,11 +34,11 @@ namespace AbstractBarListImplement.Implements
                 return null;
             }
             var result = new List<CocktailViewModel>();
-            foreach (var product in source.Cocktails)
+            foreach (var cocktail in source.Cocktails)
             {
-                if (product.CocktailName.Contains(model.CocktailName))
+                if (cocktail.CocktailName.Contains(model.CocktailName))
                 {
-                    result.Add(CreateModel(product));
+                    result.Add(CreateModel(cocktail));
                 }
             }
             return result;
@@ -49,48 +49,46 @@ namespace AbstractBarListImplement.Implements
             {
                 return null;
             }
-            foreach (var product in source.Cocktails)
+            foreach (var cocktail in source.Cocktails)
             {
-                if (product.Id == model.Id || product.CocktailName ==
-                model.CocktailName)
+                if (cocktail.Id == model.Id || cocktail.CocktailName == model.CocktailName)
                 {
-                    return CreateModel(product);
+                    return CreateModel(cocktail);
                 }
             }
             return null;
         }
         public void Insert(CocktailBindingModel model)
         {
-            var tempProduct = new Cocktail
+            var tempCocktail = new Cocktail
             {
                 Id = 1,
-                ProductComponents = new
-            Dictionary<int, int>()
+                CocktailComponents = new Dictionary<int, int>()
             };
-            foreach (var product in source.Cocktails)
+            foreach (var cocktail in source.Cocktails)
             {
-                if (product.Id >= tempProduct.Id)
+                if (cocktail.Id >= tempCocktail.Id)
                 {
-                    tempProduct.Id = product.Id + 1;
+                    tempCocktail.Id = cocktail.Id + 1;
                 }
             }
-            source.Cocktails.Add(CreateModel(model, tempProduct));
+            source.Cocktails.Add(CreateModel(model, tempCocktail));
         }
         public void Update(CocktailBindingModel model)
         {
-            Cocktail tempProduct = null;
-            foreach (var product in source.Cocktails)
+            Cocktail tempCocktail = null;
+            foreach (var cocktail in source.Cocktails)
             {
-                if (product.Id == model.Id)
+                if (cocktail.Id == model.Id)
                 {
-                    tempProduct = product;
+                    tempCocktail = cocktail;
                 }
             }
-            if (tempProduct == null)
+            if (tempCocktail == null)
             {
                 throw new Exception("Элемент не найден");
             }
-            CreateModel(model, tempProduct);
+            CreateModel(model, tempCocktail);
         }
         public void Delete(CocktailBindingModel model)
         {
@@ -104,40 +102,39 @@ namespace AbstractBarListImplement.Implements
             }
             throw new Exception("Элемент не найден");
         }
-        private static Cocktail CreateModel(CocktailBindingModel model, Cocktail
-        product)
+        private static Cocktail CreateModel(CocktailBindingModel model, Cocktail cocktail)
         {
-            product.CocktailName = model.CocktailName;
-            product.Price = model.Price;
+            cocktail.CocktailName = model.CocktailName;
+            cocktail.Price = model.Price;
             // удаляем убранные
-            foreach (var key in product.ProductComponents.Keys.ToList())
+            foreach (var key in cocktail.CocktailComponents.Keys.ToList())
             {
                 if (!model.CocktailComponents.ContainsKey(key))
                 {
-                    product.ProductComponents.Remove(key);
+                    cocktail.CocktailComponents.Remove(key);
                 }
             }
             // обновляем существуюущие и добавляем новые
             foreach (var component in model.CocktailComponents)
             {
-                if (product.ProductComponents.ContainsKey(component.Key))
+                if (cocktail.CocktailComponents.ContainsKey(component.Key))
                 {
-                    product.ProductComponents[component.Key] =
+                    cocktail.CocktailComponents[component.Key] =
                     model.CocktailComponents[component.Key].Item2;
                 }
                 else
                 {
-                    product.ProductComponents.Add(component.Key,
+                    cocktail.CocktailComponents.Add(component.Key,
                     model.CocktailComponents[component.Key].Item2);
                 }
             }
-            return product;
+            return cocktail;
         }
-        private CocktailViewModel CreateModel(Cocktail product)
+        private CocktailViewModel CreateModel(Cocktail cocktail)
         {
             // требуется дополнительно получить список компонентов для изделия с названиями и их количество
-            var productComponents = new Dictionary<int, (string, int)>();
-            foreach (var pc in product.ProductComponents)
+            var cocktailComponents = new Dictionary<int, (string, int)>();
+            foreach (var pc in cocktail.CocktailComponents)
             {
                 string componentName = string.Empty;
                 foreach (var component in source.Components)
@@ -148,14 +145,14 @@ namespace AbstractBarListImplement.Implements
                         break;
                     }
                 }
-                productComponents.Add(pc.Key, (componentName, pc.Value));
+                cocktailComponents.Add(pc.Key, (componentName, pc.Value));
             }
             return new CocktailViewModel
             {
-                Id = product.Id,
-                CocktailName = product.CocktailName,
-                Price = product.Price,
-                CocktailComponents = productComponents
+                Id = cocktail.Id,
+                CocktailName = cocktail.CocktailName,
+                Price = cocktail.Price,
+                CocktailComponents = cocktailComponents
             };
         }
     }

@@ -6,7 +6,8 @@ using System.Windows.Forms;
 using AbstractBarBusinessLogic.BusinessLogics;
 using AbstractBarContracts.BusinessLogicsContracts;
 using AbstractBarContracts.StoragesContracts;
-using AbstractBarListImplement.Implements;
+using AbstractBarFileImplement;
+using AbstractBarFileImplement.Implements;
 using Unity;
 using Unity.Lifetime;
 
@@ -36,7 +37,7 @@ namespace AbstractBarView
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(Container.Resolve<FormMain>());
-
+            FileDataListSingleton.Save();
         }
         private static IUnityContainer BuildUnityContainer()
         {
