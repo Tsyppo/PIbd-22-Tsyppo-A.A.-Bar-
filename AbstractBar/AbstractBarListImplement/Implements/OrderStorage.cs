@@ -39,7 +39,7 @@ namespace AbstractBarListImplement.Implements
             List<OrderViewModel> result = new List<OrderViewModel>();
             foreach (var order in source.Orders)
             {
-                if (order.CocktailId == model.CocktailId)
+                if (order.CocktailId == model.CocktailId || order.DateCreate >= model.DateFrom && order.DateCreate <= model.DateTo)
                 {
                     result.Add(CreateModel(order));
                 }

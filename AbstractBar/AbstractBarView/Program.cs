@@ -7,8 +7,11 @@ using AbstractBarBusinessLogic.BusinessLogics;
 using AbstractBarContracts.BusinessLogicsContracts;
 using AbstractBarContracts.StoragesContracts;
 using AbstractBarDatabaseImplement.Implements;
+using AbstractBarBusinessLogic.OfficePackage;
+using AbstractBarBusinessLogic.OfficePackage.Implements;
 using Unity;
 using Unity.Lifetime;
+
 
 namespace AbstractBarView
 {
@@ -52,7 +55,10 @@ namespace AbstractBarView
             HierarchicalLifetimeManager());
             currentContainer.RegisterType<ICocktailLogic, CocktailLogic>(new
             HierarchicalLifetimeManager());
-
+            currentContainer.RegisterType<IReportLogic, ReportLogic>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<AbstractSaveToExcel, SaveToExcel>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<AbstractSaveToWord, SaveToWord>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<AbstractSaveToPdf, SaveToPdf>(new HierarchicalLifetimeManager());
             return currentContainer;
         }
     }

@@ -33,10 +33,9 @@ namespace AbstractBarFileImplement.Implements
             {
                 return null;
             }
-            return source.Orders
-                .Where(rec => rec.CocktailId == model.CocktailId)
-                .Select(CreateModel)
-                .ToList();
+            return source.Orders.Where(rec => rec.CocktailId.ToString().Contains(model.CocktailId.ToString())
+                                      || rec.DateCreate >= model.DateFrom && rec.DateCreate <= model.DateTo)
+                                      .Select(CreateModel).ToList();
         }
 
         public OrderViewModel GetElement(OrderBindingModel model)
@@ -104,7 +103,7 @@ namespace AbstractBarFileImplement.Implements
             {
                 Id = order.Id,
                 CocktailId = order.CocktailId,
-                CocktailName = cocktail.CocktailName,
+                CocktailName = cocktail?.CocktailName,
                 Count = order.Count,
                 Sum = order.Sum,
                 Status = Enum.GetName(typeof(OrderStatus), order.Status),

@@ -27,8 +27,12 @@ namespace AbstractBarDatabaseImplement.Implements
             }
 
             using var context = new AbstractBarDatabase();
-            return context.Orders.Include(rec => rec.Cocktail).
-                Where(rec => rec.CocktailId == model.CocktailId).Select(CreateModel).ToList();
+            return context.Orders
+            .Include(rec => rec.Cocktail)
+            .Where(rec => rec.Id.Equals(model.Id) || rec.DateCreate >= model.DateFrom && rec.DateCreate <= model.DateTo)
+            .ToList()
+            .Select(CreateModel)
+            .ToList();
         }
 
         public OrderViewModel GetElement(OrderBindingModel model)
