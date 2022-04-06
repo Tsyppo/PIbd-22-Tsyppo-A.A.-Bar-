@@ -15,82 +15,122 @@ namespace AbstractBarDatabaseImplement.Implements
     {
         public List<OrderViewModel> GetFullList()
         {
-            using var context = new AbstractBarDatabase();
-            return context.Orders.Include(rec => rec.Cocktail).Select(CreateModel).ToList();
+            AbstractBarDatabase context = new AbstractBarDatabase();
+            return context.Orders.Include(rec => rec.Cocktail)
+                .Select(CreateModel)
+                .ToList();
         }
-
         public List<OrderViewModel> GetFilteredList(OrderBindingModel model)
         {
             if (model == null)
             {
                 return null;
             }
-
-            using var context = new AbstractBarDatabase();
-            return context.Orders.Include(rec => rec.Cocktail).
-                Where(rec => rec.CocktailId == model.CocktailId).Select(CreateModel).ToList();
+            AbstractBarDatabase context = new AbstractBarDatabase();
+            return context.Orders.Include(rec => rec.Cocktail)
+                .Where(rec => rec.CocktailId == model.CocktailId || (!model.DateFrom.HasValue && !model.DateTo.HasValue && rec.DateCreate.Date == model.DateCreate.Date) ||
+                (model.DateFrom.HasValue && model.DateTo.HasValue && rec.DateCreate.Date >= model.DateFrom.Value.Date
+                && rec.DateCreate.Date <= model.DateTo.Value.Date))
+                .Select(CreateModel)
+                .ToList();
         }
-
         public OrderViewModel GetElement(OrderBindingModel model)
         {
             if (model == null)
             {
                 return null;
             }
-
-            using var context = new AbstractBarDatabase();
-            var order = context.Orders.Include(rec => rec.Cocktail).
-               FirstOrDefault(rec => rec.CocktailId == model.CocktailId || rec.Id == model.Id);
-            return order != null ? CreateModel(order) : null;
+            AbstractBarDatabase context = new AbstractBarDatabase();
+            Order order = context.Orders.Include(rec => rec.Cocktail)
+                 .FirstOrDefault(rec => rec.Id == model.Id);
+            return order != null ?
+            new OrderViewModel
+            {
+                Id = order.Id,
+                CocktailId = order.CocktailId,
+                CocktailName = order.Cocktail.CocktailName,
+                Count = order.Count,
+                Sum = order.Sum,
+                Status = order.Status,
+                DateCreate = order.DateCreate,
+                DateImplement = order.DateImplement,
+            } :
+            null;
         }
-
         public void Insert(OrderBindingModel model)
         {
-            using var context = new AbstractBarDatabase();
-            Order order = new Order();
-            CreateModel(model, order, context);
+            AbstractBarDatabase context = new AbstractBarDatabase();
+            Order order = new Order
+            {
+                CocktailId = model.CocktailId,
+                Count = model.Count,
+                Sum = model.Sum,
+                Status = model.Status,
+                DateCreate = model.DateCreate,
+                DateImplement = model.DateImplement,
+            };
             context.Orders.Add(order);
             context.SaveChanges();
+            CreateModel(model, order);
+            context.SaveChanges();
         }
-
         public void Update(OrderBindingModel model)
         {
-            using var context = new AbstractBarDatabase();
-            var element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+            AbstractBarDatabase context = new AbstractBarDatabase();
+            Order element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
             if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
-            CreateModel(model, element, context);
+            element.CocktailId = model.CocktailId;
+            element.Count = model.Count;
+            element.Sum = model.Sum;
+            element.Status = model.Status;
+            element.DateCreate = model.DateCreate;
+            element.DateImplement = model.DateImplement;
+            CreateModel(model, element);
             context.SaveChanges();
         }
-
         public void Delete(OrderBindingModel model)
         {
-            using var context = new AbstractBarDatabase();
-            var element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+            AbstractBarDatabase context = new AbstractBarDatabase();
+            Order element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
             if (element != null)
             {
-                context.Remove(element);
+                context.Orders.Remove(element);
                 context.SaveChanges();
             }
             else
             {
                 throw new Exception("Элемент не найден");
-            };
+            }
         }
-
-        private static Order CreateModel(OrderBindingModel model, Order order, AbstractBarDatabase context)
+        private Order CreateModel(OrderBindingModel model, Order order)
         {
-            order.CocktailId = model.CocktailId;
-            order.Cocktail = context.Cocktails.FirstOrDefault(rec => rec.Id == model.CocktailId);
-            order.Count = model.Count;
-            order.Sum = model.Sum;
-            order.Status = model.Status;
-            order.DateCreate = model.DateCreate;
-            order.DateImplement = model.DateImplement;
+            if (model == null)
+            {
+                return null;
+            }
+
+            AbstractBarDatabase context = new AbstractBarDatabase();
+            Cocktail element = context.Cocktails.FirstOrDefault(rec => rec.Id == model.CocktailId);
+            if (element != null)
+            {
+                if (element.Orders == null)
+                {
+                    element.Orders = new List<Order>();
+                }
+                element.Orders.Add(order);
+                context.Cocktails.Update(element);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("Элемент не найден");
+            }
             return order;
         }
+
         private static OrderViewModel CreateModel(Order order)
         {
             return new OrderViewModel
@@ -100,7 +140,7 @@ namespace AbstractBarDatabaseImplement.Implements
                 CocktailName = order.Cocktail.CocktailName,
                 Count = order.Count,
                 Sum = order.Sum,
-                Status = order.Status.ToString(),
+                Status = order.Status,
                 DateCreate = order.DateCreate,
                 DateImplement = order.DateImplement
             };

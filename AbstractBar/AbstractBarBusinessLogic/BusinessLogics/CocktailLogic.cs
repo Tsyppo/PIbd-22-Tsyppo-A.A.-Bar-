@@ -44,7 +44,7 @@ namespace AbstractBarBusinessLogic.BusinessLogics
             });
             if (element != null && element.Id != model.Id)
             {
-                throw new Exception("Уже есть мебель с таким названием");
+                throw new Exception("Уже есть коктейль с таким названием");
             }
             if (model.Id.HasValue)
             {
@@ -65,7 +65,7 @@ namespace AbstractBarBusinessLogic.BusinessLogics
 
             if (element == null)
             {
-                throw new Exception("Мебель не найдена");
+                throw new Exception("Коктейль не найден");
             }
             _cocktailStorage.Delete(model);
         }

@@ -11,9 +11,9 @@ namespace AbstractBarDatabaseImplement.Models
         public string CocktailName { get; set; }
         [Required]
         public decimal Price { get; set; }
-        [ForeignKey("IceCreamId")]
+        [ForeignKey("CocktailId")]
         public virtual List<CocktailComponent> CocktailComponents { get; set; }
-        [ForeignKey("IceCreamId")]
+        [ForeignKey("CocktailId")]
         public virtual List<Order> Orders { get; set; }
     }
 }
