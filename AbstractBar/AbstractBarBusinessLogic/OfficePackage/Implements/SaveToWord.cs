@@ -20,7 +20,8 @@ namespace AbstractBarBusinessLogic.OfficePackage.Implements
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private static JustificationValues GetJustificationValues(WordJustificationType type)
+        private static JustificationValues GetJustificationValues(WordJustificationType
+       type)
         {
             return type switch
             {
@@ -105,7 +106,8 @@ namespace AbstractBarBusinessLogic.OfficePackage.Implements
                     docRun.AppendChild(new Text
                     {
                         Text = run.Item1,
-                        Space = SpaceProcessingModeValues.Preserve
+                        Space =
+                   SpaceProcessingModeValues.Preserve
                     });
                     docParagraph.AppendChild(docRun);
                 }

@@ -19,23 +19,18 @@ namespace AbstractBarFileImplement.Implements
             source = FileDataListSingleton.GetInstance();
         }
 
-        public List<OrderViewModel> GetFullList()
+        public void Delete(OrderBindingModel model)
         {
-            return source.Orders
-                .Select(CreateModel)
-                .ToList();
-
-        }
-
-        public List<OrderViewModel> GetFilteredList(OrderBindingModel model)
-        {
-            if (model == null)
+            Order element = source.Orders
+                      .FirstOrDefault(rec => rec.Id == model.Id);
+            if (element != null)
             {
-                return null;
+                source.Orders.Remove(element);
             }
-            return source.Orders.Where(rec => rec.CocktailId.ToString().Contains(model.CocktailId.ToString())
-                                      || rec.DateCreate >= model.DateFrom && rec.DateCreate <= model.DateTo)
-                                      .Select(CreateModel).ToList();
+            else
+            {
+                throw new Exception("Элемент не найден");
+            }
         }
 
         public OrderViewModel GetElement(OrderBindingModel model)
@@ -45,19 +40,35 @@ namespace AbstractBarFileImplement.Implements
                 return null;
             }
             var order = source.Orders
-                .FirstOrDefault(rec => rec.Id == model.Id || rec.CocktailId
-            == model.CocktailId);
+                .FirstOrDefault(rec => rec.Id == model.Id || rec.CocktailId == model.CocktailId);
             return order != null ? CreateModel(order) : null;
+        }
+
+        public List<OrderViewModel> GetFilteredList(OrderBindingModel model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+            return source.Orders
+                .Where(rec => rec.CocktailId.ToString().Contains(model.CocktailId.ToString()) || ((!model.DateFrom.HasValue && !model.DateTo.HasValue && rec.DateCreate.Date == model.DateCreate.Date) ||
+                (model.DateFrom.HasValue && model.DateTo.HasValue && rec.DateCreate.Date >= model.DateFrom.Value.Date
+                && rec.DateCreate.Date <= model.DateTo.Value.Date)))
+                .Select(CreateModel)
+                .ToList();
+        }
+
+        public List<OrderViewModel> GetFullList()
+        {
+            return source.Orders
+                .Select(CreateModel)
+                .ToList();
         }
 
         public void Insert(OrderBindingModel model)
         {
-            int maxId = source.Orders.Count > 0 ? source.Components.Max(rec => rec.Id)
-                : 0;
-            var element = new Order
-            {
-                Id = maxId + 1
-            };
+            int maxId = source.Orders.Count > 0 ? source.Orders.Max(rec => rec.Id) : 0;
+            Order element = new Order { Id = maxId + 1 };
             source.Orders.Add(CreateModel(model, element));
         }
 
@@ -66,22 +77,9 @@ namespace AbstractBarFileImplement.Implements
             var element = source.Orders.FirstOrDefault(rec => rec.Id == model.Id);
             if (element == null)
             {
-                throw new Exception("Элемент не найден");
+                throw new Exception("Заказ не найден");
             }
             CreateModel(model, element);
-        }
-
-        public void Delete(OrderBindingModel model)
-        {
-            Order element = source.Orders.FirstOrDefault(rec => rec.Id == model.Id);
-            if (element != null)
-            {
-                source.Orders.Remove(element);
-            }
-            else
-            {
-                throw new Exception("Элемент не найден");
-            }
         }
 
         private Order CreateModel(OrderBindingModel model, Order order)
@@ -97,18 +95,16 @@ namespace AbstractBarFileImplement.Implements
 
         private OrderViewModel CreateModel(Order order)
         {
-            Cocktail cocktail = source.Cocktails.FirstOrDefault(x => x.Id == order.CocktailId);
-
             return new OrderViewModel
             {
                 Id = order.Id,
                 CocktailId = order.CocktailId,
-                CocktailName = cocktail?.CocktailName,
+                CocktailName = source.Cocktails.FirstOrDefault(Cocktail => Cocktail.Id == order.CocktailId)?.CocktailName,
                 Count = order.Count,
                 Sum = order.Sum,
-                Status = Enum.GetName(typeof(OrderStatus), order.Status),
+                Status = order.Status,
                 DateCreate = order.DateCreate,
-                DateImplement = order.DateImplement
+                DateImplement = order.DateImplement,
             };
         }
     }

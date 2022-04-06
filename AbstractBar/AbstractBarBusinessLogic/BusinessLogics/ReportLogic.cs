@@ -15,15 +15,21 @@ namespace AbstractBarBusinessLogic.BusinessLogics
     public class ReportLogic : IReportLogic
     {
         private readonly IComponentStorage _componentStorage;
+
         private readonly ICocktailStorage _cocktailStorage;
+
         private readonly IOrderStorage _orderStorage;
+
         private readonly AbstractSaveToExcel _saveToExcel;
+
         private readonly AbstractSaveToWord _saveToWord;
+
         private readonly AbstractSaveToPdf _saveToPdf;
+
         public ReportLogic(ICocktailStorage cocktailStorage, IComponentStorage
-       componentStorage, IOrderStorage orderStorage,
+        componentStorage, IOrderStorage orderStorage,
         AbstractSaveToExcel saveToExcel, AbstractSaveToWord saveToWord,
-       AbstractSaveToPdf saveToPdf)
+        AbstractSaveToPdf saveToPdf)
         {
             _cocktailStorage = cocktailStorage;
             _componentStorage = componentStorage;
@@ -32,41 +38,37 @@ namespace AbstractBarBusinessLogic.BusinessLogics
             _saveToWord = saveToWord;
             _saveToPdf = saveToPdf;
         }
-        /// <summary>
-        /// Получение списка компонент с указанием, в каких изделиях используются
-        /// </summary>/// <returns></returns>
+
+        // Получение списка компонент с указанием, в каких изделиях используются
         public List<ReportCocktailComponentViewModel> GetCocktailComponent()
         {
-            var сocktails = _cocktailStorage.GetFullList();
+            var Components = _componentStorage.GetFullList();
+            var Cocktails = _cocktailStorage.GetFullList();
             var list = new List<ReportCocktailComponentViewModel>();
-            foreach (var сс in сocktails)
+            foreach (var Cocktail in Cocktails)
             {
                 var record = new ReportCocktailComponentViewModel
                 {
-                    CocktailName = сс.CocktailName,
+                    CocktailName = Cocktail.CocktailName,
                     Components = new List<Tuple<string, int>>(),
                     TotalCount = 0
                 };
-                foreach (var component in сс.CocktailComponents)
+                foreach (var Component in Cocktail.CocktailComponents)
                 {
-                    record.Components.Add(new Tuple<string, int>(component.Value.Item1, component.Value.Item2));
-                    record.TotalCount += component.Value.Item2;
+                    record.Components.Add(new Tuple<string, int>(Component.Value.Item1, Component.Value.Item2));
+                    record.TotalCount += Component.Value.Item2;
                 }
                 list.Add(record);
             }
             return list;
         }
-        /// <summary>
-        /// Получение списка заказов за определенный период
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+
+        // Получение списка заказов за определенный период
         public List<ReportOrdersViewModel> GetOrders(ReportBindingModel model)
         {
             return _orderStorage.GetFilteredList(new OrderBindingModel
             {
-                DateFrom =
-           model.DateFrom,
+                DateFrom = model.DateFrom,
                 DateTo = model.DateTo
             })
             .Select(x => new ReportOrdersViewModel
@@ -77,38 +79,32 @@ namespace AbstractBarBusinessLogic.BusinessLogics
                 Sum = x.Sum,
                 Status = x.Status
             })
-           .ToList();
+            .ToList();
         }
-        /// <summary>
-        /// Сохранение компонент в файл-Word
-        /// </summary>
-        /// <param name="model"></param>
+
+        // Сохранение швейных изделий в файл-Word
         public void SaveCocktailsToWordFile(ReportBindingModel model)
         {
             _saveToWord.CreateDoc(new WordInfo
             {
                 FileName = model.FileName,
-                Title = "Список коктейлей",
+                Title = "Список изделий",
                 Cocktails = _cocktailStorage.GetFullList()
             });
         }
-        /// <summary>
-        /// Сохранение компонент с указаеним продуктов в файл-Excel
-        /// </summary>
-        /// <param name="model"></param>
+
+        // Сохранение компонент с указаеним продуктов в файл-Excel
         public void SaveCocktailComponentToExcelFile(ReportBindingModel model)
         {
             _saveToExcel.CreateReport(new ExcelInfo
             {
                 FileName = model.FileName,
-                Title = "Список коктейлей",
+                Title = "Список тканей",
                 CocktailComponents = GetCocktailComponent()
             });
         }
-        /// <summary>
-        /// Сохранение заказов в файл-Pdf
-        /// </summary>
-        /// <param name="model"></param>
+
+        // Сохранение заказов в файл-Pdf
         public void SaveOrdersToPdfFile(ReportBindingModel model)
         {
             _saveToPdf.CreateDoc(new PdfInfo

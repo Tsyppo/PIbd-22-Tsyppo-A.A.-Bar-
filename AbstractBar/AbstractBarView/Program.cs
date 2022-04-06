@@ -12,7 +12,6 @@ using AbstractBarBusinessLogic.OfficePackage.Implements;
 using Unity;
 using Unity.Lifetime;
 
-
 namespace AbstractBarView
 {
     internal static class Program

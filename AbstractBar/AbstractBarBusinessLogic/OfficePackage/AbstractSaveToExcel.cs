@@ -78,7 +78,8 @@ namespace AbstractBarBusinessLogic.OfficePackage
         /// Добавляем новую ячейку в лист
         /// </summary>
         /// <param name="cellParameters"></param>
-        protected abstract void InsertCellInWorksheet(ExcelCellParameters excelParams);
+        protected abstract void InsertCellInWorksheet(ExcelCellParameters
+        excelParams);
         /// <summary>
         /// Объединение ячеек
         /// </summary>

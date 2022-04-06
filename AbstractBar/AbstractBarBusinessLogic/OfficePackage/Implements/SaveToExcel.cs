@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AbstractBarBusinessLogic.OfficePackage.HelperEnums;
-using AbstractBarBusinessLogic.OfficePackage.HelperModels;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Office2013.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using AbstractBarBusinessLogic.OfficePackage.HelperEnums;
+using AbstractBarBusinessLogic.OfficePackage.HelperModels;
 
 namespace AbstractBarBusinessLogic.OfficePackage.Implements
 {

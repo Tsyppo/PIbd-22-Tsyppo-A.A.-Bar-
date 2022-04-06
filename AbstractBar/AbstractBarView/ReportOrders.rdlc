@@ -53,7 +53,7 @@
     <ReportSection>
       <Body>
         <ReportItems>
-          <Textbox Name="Textbox1">
+          <Textbox Name="TextboxOrders">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
@@ -61,49 +61,51 @@
                 <TextRuns>
                   <TextRun>
                     <Value>Заказы</Value>
-                    <Style />
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
-            <rd:DefaultName>Textbox1</rd:DefaultName>
-            <Top>0.86939cm</Top>
-            <Left>7.76203cm</Left>
             <Height>0.6cm</Height>
-            <Width>1.36229cm</Width>
+            <Width>21.51cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Tablix Name="Tablix">
+          <Tablix Name="Tablix1">
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>2.69897cm</Width>
+                  <Width>5.50333cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.75458cm</Width>
+                  <Width>4.61667cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.69897cm</Width>
+                  <Width>2.60351cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.69897cm</Width>
+                  <Width>4.42616cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.40263cm</Width>
+                  <Width>4.36034cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.6cm</Height>
+                  <Height>1.08507cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -115,13 +117,79 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>Дата создания</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox2</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox10">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Изделие</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox10</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox8">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Количество</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox8</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -144,8 +212,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Коктейль</Value>
-                                  <Style />
+                                  <Value>Сумма</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -174,8 +244,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Количество</Value>
-                                  <Style />
+                                  <Value>Статус</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -195,70 +267,10 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox8">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Сумма</Value>
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox8</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox10">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Статус</Value>
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox10</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.6cm</Height>
+                  <Height>1.08507cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -382,7 +394,7 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Status">
+                        <Textbox Name="Textbox1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -396,7 +408,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Status</rd:DefaultName>
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -434,10 +446,9 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSetOrders</DataSetName>
-            <Top>2.38689cm</Top>
-            <Left>0.28554cm</Left>
-            <Height>1.2cm</Height>
-            <Width>16.25412cm</Width>
+            <Top>1.41167cm</Top>
+            <Height>2.17014cm</Height>
+            <Width>21.51cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -445,25 +456,29 @@
               </Border>
             </Style>
           </Tablix>
-          <Textbox Name="ReportParameterPeriod">
+          <Textbox Name="Textbox19">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Parameters!ReportParameterPeriod.Value</Value>
-                    <Style />
+                    <Value>Итого:</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
-            <rd:DefaultName>ReportParameterPeriod</rd:DefaultName>
-            <Top>1.6105cm</Top>
-            <Left>6.08986cm</Left>
+            <rd:DefaultName>Textbox19</rd:DefaultName>
+            <Top>3.7582cm</Top>
+            <Left>12.11438cm</Left>
             <Height>0.6cm</Height>
-            <Width>4.48967cm</Width>
+            <Width>2.5cm</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -475,25 +490,29 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox18">
+          <Textbox Name="Textbox20">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>             Итого:</Value>
-                    <Style />
+                    <Value>=Sum(Fields!Sum.Value, "DataSetOrders")</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
-            <rd:DefaultName>Textbox18</rd:DefaultName>
-            <Top>3.91266cm</Top>
-            <Left>8.73908cm</Left>
+            <rd:DefaultName>Textbox19</rd:DefaultName>
+            <Top>3.7582cm</Top>
+            <Left>14.64966cm</Left>
             <Height>0.6cm</Height>
-            <Width>2.69897cm</Width>
+            <Width>2.5cm</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -505,25 +524,28 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox19">
+          <Textbox Name="Textbox23">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Sum(Fields!Sum.Value, "DataSetOrders")</Value>
-                    <Style />
+                    <Value>=Parameters!ReportParameterPeriod.Value</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
-            <rd:DefaultName>Textbox19</rd:DefaultName>
-            <Top>3.91266cm</Top>
-            <Left>11.43805cm</Left>
+            <rd:DefaultName>Textbox23</rd:DefaultName>
+            <Top>0.63528cm</Top>
             <Height>0.6cm</Height>
-            <Width>2.69897cm</Width>
+            <Width>21.51cm</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
@@ -536,10 +558,10 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>2.07536in</Height>
+        <Height>2in</Height>
         <Style />
       </Body>
-      <Width>6.62834in</Width>
+      <Width>8.56017in</Width>
       <Page>
         <PageHeight>29.7cm</PageHeight>
         <PageWidth>21cm</PageWidth>
@@ -573,5 +595,5 @@
     </GridLayoutDefinition>
   </ReportParametersLayout>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
-  <rd:ReportID>6644279d-11a9-454a-8ec9-cbb9922cfd3e</rd:ReportID>
+  <rd:ReportID>76b1e838-62c3-4b0e-abaf-90abbe25e81d</rd:ReportID>
 </Report>
