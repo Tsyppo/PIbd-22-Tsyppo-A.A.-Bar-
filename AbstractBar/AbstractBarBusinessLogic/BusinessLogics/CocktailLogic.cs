@@ -7,7 +7,6 @@ using AbstractBarContracts.BindingModels;
 using AbstractBarContracts.BusinessLogicsContracts;
 using AbstractBarContracts.StoragesContracts;
 using AbstractBarContracts.ViewModels;
-using AbstractBarContracts.Enums;
 
 namespace AbstractBarBusinessLogic.BusinessLogics
 {
