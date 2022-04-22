@@ -124,7 +124,7 @@
             this.Controls.Add(this.labelCount);
             this.Controls.Add(this.labelCocktail);
             this.Name = "FormCreateOrder";
-            this.Text = "FormCreateOrder";
+            this.Text = "Заказ";
             this.Load += new System.EventHandler(this.FormCreateOrder_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

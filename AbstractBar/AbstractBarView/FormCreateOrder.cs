@@ -50,7 +50,7 @@ namespace AbstractBarView
                 try
                 {
                     int id = Convert.ToInt32(comboBoxCocktail.SelectedValue);
-                    CocktailViewModel product = _logicC.Read(new CocktailBindingModel {Id = id})?[0];
+                    CocktailViewModel product = _logicC.Read(new CocktailBindingModel { Id = id })?[0];
                     int count = Convert.ToInt32(textBoxCount.Text);
                     textBoxSum.Text = (count * product?.Price ?? 0).ToString();
                 }
