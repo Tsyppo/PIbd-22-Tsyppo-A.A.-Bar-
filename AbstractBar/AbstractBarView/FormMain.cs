@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AbstractBarContracts.BindingModels;
 using AbstractBarContracts.BusinessLogicsContracts;
+using AbstractBarFileImplement;
+using AbstractBarFileImplement.Models;
 using Unity;
 
 namespace AbstractBarView
@@ -130,6 +132,23 @@ namespace AbstractBarView
         private void ButtonRef_Click(object sender, EventArgs e)
         {
             LoadData();
-        }      
+        }
+
+        private void складыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Program.Container.Resolve<FormWarehouses>();
+            form.ShowDialog();
+        }
+
+        private void пополнитьСкладToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Program.Container.Resolve<FormWarehouseComponent>();
+            form.ShowDialog();
+        }
+
+        private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            FileDataListSingleton.GetInstance().SaveData();
+        }
     }
 }
