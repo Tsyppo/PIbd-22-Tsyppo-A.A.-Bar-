@@ -53,6 +53,10 @@ namespace AbstractBarView
             HierarchicalLifetimeManager());
             currentContainer.RegisterType<ICocktailLogic, CocktailLogic>(new
             HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IWarehouseStorage, WarehouseStorage>(new
+            HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IWarehouseLogic, WarehouseLogic>(new
+            HierarchicalLifetimeManager());
 
             return currentContainer;
         }
