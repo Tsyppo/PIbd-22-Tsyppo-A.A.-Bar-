@@ -19,20 +19,6 @@ namespace AbstractBarFileImplement.Implements
             source = FileDataListSingleton.GetInstance();
         }
 
-        public void Delete(OrderBindingModel model)
-        {
-            Order element = source.Orders
-                      .FirstOrDefault(rec => rec.Id == model.Id);
-            if (element != null)
-            {
-                source.Orders.Remove(element);
-            }
-            else
-            {
-                throw new Exception("Элемент не найден");
-            }
-        }
-
         public OrderViewModel GetElement(OrderBindingModel model)
         {
             if (model == null)
@@ -51,11 +37,17 @@ namespace AbstractBarFileImplement.Implements
                 return null;
             }
             return source.Orders
-                .Where(rec => rec.CocktailId.ToString().Contains(model.CocktailId.ToString()) || ((!model.DateFrom.HasValue && !model.DateTo.HasValue && rec.DateCreate.Date == model.DateCreate.Date) ||
-                (model.DateFrom.HasValue && model.DateTo.HasValue && rec.DateCreate.Date >= model.DateFrom.Value.Date
-                && rec.DateCreate.Date <= model.DateTo.Value.Date)))
-                .Select(CreateModel)
-                .ToList();
+                .Where(rec => (!model.DateFrom.HasValue && !model.DateTo.HasValue &&
+                    rec.DateCreate.Date == model.DateCreate.Date) ||
+                    (model.DateFrom.HasValue && model.DateTo.HasValue &&
+                    rec.DateCreate.Date >= model.DateFrom.Value.Date && rec.DateCreate.Date <=
+                    model.DateTo.Value.Date) ||
+                    (model.ClientId.HasValue && rec.ClientId == model.ClientId) ||
+                    (model.SearchStatus.HasValue && model.SearchStatus.Value ==
+                    rec.Status) ||
+                    (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId && model.Status == rec.Status))
+                 .Select(CreateModel)
+                 .ToList();
         }
 
         public List<OrderViewModel> GetFullList()
@@ -82,9 +74,24 @@ namespace AbstractBarFileImplement.Implements
             CreateModel(model, element);
         }
 
+        public void Delete(OrderBindingModel model)
+        {
+            Order element = source.Orders
+                      .FirstOrDefault(rec => rec.Id == model.Id);
+            if (element != null)
+            {
+                source.Orders.Remove(element);
+            }
+            else
+            {
+                throw new Exception("Элемент не найден");
+            }
+        }
+
         private Order CreateModel(OrderBindingModel model, Order order)
         {
             order.CocktailId = model.CocktailId;
+            order.ClientId = (int)model.ClientId;
             order.Count = model.Count;
             order.Sum = model.Sum;
             order.Status = model.Status;
@@ -100,6 +107,10 @@ namespace AbstractBarFileImplement.Implements
                 Id = order.Id,
                 CocktailId = order.CocktailId,
                 CocktailName = source.Cocktails.FirstOrDefault(Cocktail => Cocktail.Id == order.CocktailId)?.CocktailName,
+                ClientId = order.ClientId,
+                ClientFIO = source.Clients.FirstOrDefault(rec => rec.Id == order.ClientId)?.ClientFIO,
+                ImplementerId = order?.ImplementerId,
+                ImplementerFIO = source.Implementers.FirstOrDefault(rec => rec.Id == order.ImplementerId)?.ImplementerFIO,
                 Count = order.Count,
                 Sum = order.Sum,
                 Status = order.Status,

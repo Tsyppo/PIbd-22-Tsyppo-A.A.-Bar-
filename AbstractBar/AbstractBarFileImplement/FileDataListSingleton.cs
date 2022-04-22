@@ -17,6 +17,10 @@ namespace AbstractBarFileImplement
         private readonly string ComponentFileName = "Component.xml";
         private readonly string OrderFileName = "Order.xml";
         private readonly string CocktailFileName = "Cocktail.xml";
+        private readonly string ClientFileName = "Client.xml";
+        private readonly string ImplementerFileName = "Implementer.xml";
+        public List<Implementer> Implementers { get; set; }
+        public List<Client> Clients { get; set; }
         public List<Component> Components { get; set; }
         public List<Order> Orders { get; set; }
         public List<Cocktail> Cocktails { get; set; }
@@ -25,6 +29,7 @@ namespace AbstractBarFileImplement
             Components = LoadComponents();
             Orders = LoadOrders();
             Cocktails = LoadCocktails();
+            Clients = LoadClients();
         }
         public static FileDataListSingleton GetInstance()
         {
@@ -39,6 +44,48 @@ namespace AbstractBarFileImplement
             SaveComponents();
             SaveOrders();
             SaveCocktails();
+            SaveClients();
+            SaveImplementers();
+        }
+        private List<Implementer> LoadImplementers()
+        {
+            var list = new List<Implementer>();
+            if (File.Exists(ImplementerFileName))
+            {
+                var xDocument = XDocument.Load(ImplementerFileName);
+                var xElements = xDocument.Root.Elements("Imlementer").ToList();
+                foreach (var elem in xElements)
+                {
+                    list.Add(new Implementer
+                    {
+                        Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                        ImplementerFIO = elem.Attribute("ImplementerFIO").Value,
+                        PauseTime = Convert.ToInt32(elem.Attribute("PauseTime").Value),
+                        WorkingTime = Convert.ToInt32(elem.Attribute("WorkingTime").Value)
+                    });
+                }
+            }
+            return list;
+        }
+        private List<Client> LoadClients()
+        {
+            var list = new List<Client>();
+            if (File.Exists(ClientFileName))
+            {
+                XDocument xDocument = XDocument.Load(ClientFileName);
+                var xElements = xDocument.Root.Elements("Client").ToList();
+                foreach (var elem in xElements)
+                {
+                    list.Add(new Client
+                    {
+                        Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                        ClientFIO = elem.Element("ClientFIO").Value,
+                        Login = elem.Element("Login").Value,
+                        Password = elem.Element("Password").Value,
+                    });
+                }
+            }
+            return list;
         }
         private List<Component> LoadComponents()
         {
@@ -125,6 +172,37 @@ namespace AbstractBarFileImplement
             }
             return list;
         }
+        private void SaveImplementers()
+        {
+            var xElement = new XElement("Implementers");
+            foreach (var implementer in Implementers)
+            {
+                xElement.Add(new XElement("Implementer",
+                    new XAttribute("Id", implementer.Id),
+                    new XAttribute("ImplementerFIO", implementer.ImplementerFIO),
+                    new XAttribute("WorkingTime", implementer.WorkingTime),
+                    new XAttribute("PauseTime", implementer.PauseTime)));
+            }
+            var xDocument = new XDocument(xElement);
+            xDocument.Save(ImplementerFileName);
+        }
+        private void SaveClients()
+        {
+            if (Clients != null)
+            {
+                var xElement = new XElement("Clients");
+                foreach (var client in Clients)
+                {
+                    xElement.Add(new XElement("Client",
+                    new XAttribute("Id", client.Id),
+                    new XElement("ClientFIO", client.ClientFIO),
+                    new XElement("Login", client.Login),
+                    new XElement("Password", client.Password)));
+                }
+                XDocument xDocument = new XDocument(xElement);
+                xDocument.Save(ClientFileName);
+            }
+        }
         private void SaveComponents()
         {
             if (Components != null)
@@ -190,6 +268,8 @@ namespace AbstractBarFileImplement
             instance.SaveOrders();
             instance.SaveCocktails();
             instance.SaveComponents();
+            instance.SaveClients();
+            instance.SaveImplementers();
         }
     }
 }

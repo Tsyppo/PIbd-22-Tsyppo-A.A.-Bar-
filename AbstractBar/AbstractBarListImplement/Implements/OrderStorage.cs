@@ -20,19 +20,6 @@ namespace AbstractBarListImplement.Implements
             source = DataListSingleton.GetInstance();
         }
 
-        public void Delete(OrderBindingModel model)
-        {
-            for (int i = 0; i < source.Orders.Count; ++i)
-            {
-                if (source.Orders[i].Id == model.Id)
-                {
-                    source.Orders.RemoveAt(i);
-                    return;
-                }
-            }
-            throw new Exception("Элемент не найден");
-        }
-
         public OrderViewModel GetElement(OrderBindingModel model)
         {
             if (model == null)
@@ -48,7 +35,6 @@ namespace AbstractBarListImplement.Implements
             }
             return null;
         }
-
         public List<OrderViewModel> GetFilteredList(OrderBindingModel model)
         {
             if (model == null)
@@ -58,16 +44,16 @@ namespace AbstractBarListImplement.Implements
             List<OrderViewModel> result = new List<OrderViewModel>();
             foreach (var order in source.Orders)
             {
-                if (order.Id.Equals(model.Id) || ((!model.DateFrom.HasValue && !model.DateTo.HasValue && order.DateCreate.Date == model.DateCreate.Date) ||
-                (model.DateFrom.HasValue && model.DateTo.HasValue && order.DateCreate.Date >= model.DateFrom.Value.Date
-                && order.DateCreate.Date <= model.DateTo.Value.Date)))
+                if ((!model.DateFrom.HasValue && !model.DateTo.HasValue && order.DateCreate == model.DateCreate) ||
+                  (model.DateFrom.HasValue && model.DateTo.HasValue && order.DateCreate.Date >= model.DateFrom.Value.Date && order.DateCreate.Date <= model.DateTo.Value.Date) ||
+                  (model.ClientId.HasValue && order.ClientId == model.ClientId) || (model.SearchStatus.HasValue && model.SearchStatus.Value == order.Status) ||
+                  (model.ImplementerId.HasValue && order.ImplementerId == model.ImplementerId && model.Status == order.Status))
                 {
                     result.Add(CreateModel(order));
                 }
             }
             return result;
         }
-
         public List<OrderViewModel> GetFullList()
         {
             List<OrderViewModel> result = new List<OrderViewModel>();
@@ -77,7 +63,6 @@ namespace AbstractBarListImplement.Implements
             }
             return result;
         }
-
         public void Insert(OrderBindingModel model)
         {
             Order tempOrder = new Order { Id = 1 };
@@ -107,10 +92,23 @@ namespace AbstractBarListImplement.Implements
             }
             CreateModel(model, tempOrder);
         }
-
+        public void Delete(OrderBindingModel model)
+        {
+            for (int i = 0; i < source.Orders.Count; ++i)
+            {
+                if (source.Orders[i].Id == model.Id)
+                {
+                    source.Orders.RemoveAt(i);
+                    return;
+                }
+            }
+            throw new Exception("Элемент не найден");
+        }
         private Order CreateModel(OrderBindingModel model, Order order)
         {
             order.CocktailId = model.CocktailId;
+            order.ClientId = (int)model.ClientId;
+            order.ImplementerId = model.ImplementerId;
             order.Count = model.Count;
             order.Sum = model.Sum;
             order.Status = model.Status;
@@ -122,11 +120,31 @@ namespace AbstractBarListImplement.Implements
         private OrderViewModel CreateModel(Order order)
         {
             string CocktailName = null;
-            foreach (var Cocktail in source.Cocktails)
+            foreach (var garment in source.Cocktails)
             {
-                if (Cocktail.Id == order.CocktailId)
+                if (garment.Id == order.CocktailId)
                 {
-                    CocktailName = Cocktail.CocktailName;
+                    CocktailName = garment.CocktailName;
+                    break;
+                }
+            }
+
+            string clientFIO = null;
+            foreach (var client in source.Clients)
+            {
+                if (client.Id == order.CocktailId)
+                {
+                    clientFIO = client.ClientFIO;
+                    break;
+                }
+            }
+
+            string implementerFIO = null;
+            for (int i = 0; i < source.Implementers.Count; i++)
+            {
+                if (source.Implementers[i].Id == order?.ImplementerId)
+                {
+                    implementerFIO = source.Implementers[i].ImplementerFIO;
                     break;
                 }
             }
@@ -135,6 +153,10 @@ namespace AbstractBarListImplement.Implements
                 Id = order.Id,
                 CocktailId = order.CocktailId,
                 CocktailName = CocktailName,
+                ClientId = order.ClientId,
+                ClientFIO = clientFIO,
+                ImplementerId = order.ImplementerId,
+                ImplementerFIO = implementerFIO,
                 Count = order.Count,
                 Sum = order.Sum,
                 Status = order.Status,
