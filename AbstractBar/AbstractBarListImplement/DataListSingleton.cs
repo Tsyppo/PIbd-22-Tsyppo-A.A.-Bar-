@@ -14,12 +14,14 @@ namespace AbstractBarListImplement
         public List<Component> Components { get; set; }
         public List<Order> Orders { get; set; }
         public List<Cocktail> Cocktails { get; set; }
+        public List<Implementer> Implementers { get; set; }
         private DataListSingleton()
         {
             Components = new List<Component>();
             Orders = new List<Order>();
             Cocktails = new List<Cocktail>();
             Clients = new List<Client>();
+            Implementers = new List<Implementer>();
         }
         public static DataListSingleton GetInstance()
         {

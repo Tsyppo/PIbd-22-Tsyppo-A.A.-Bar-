@@ -4,14 +4,16 @@ using AbstractBarDatabaseImplement;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AbstractBarDatabaseImplement.Migrations
 {
     [DbContext(typeof(AbstractBarDatabase))]
-    partial class AbstractBarDatabaseModelSnapshot : ModelSnapshot
+    [Migration("20220420072759_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -199,6 +201,7 @@ namespace AbstractBarDatabaseImplement.Migrations
                         .HasForeignKey("CocktailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
                     b.HasOne("AbstractBarDatabaseImplement.Models.Implementer", "Implementer")
                         .WithMany("Orders")
                         .HasForeignKey("ImplementerId");
@@ -208,11 +211,6 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.Navigation("Cocktail");
 
                     b.Navigation("Implementer");
-                });
-
-            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Client", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Client", b =>
