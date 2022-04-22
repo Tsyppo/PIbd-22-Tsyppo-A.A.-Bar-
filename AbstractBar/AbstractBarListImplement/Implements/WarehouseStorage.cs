@@ -13,19 +13,42 @@ namespace AbstractBarListImplement.Implements
     {
 
         private readonly DataListSingleton source;
+
         public WarehouseStorage()
         {
             source = DataListSingleton.GetInstance();
         }
-        public List<WarehouseViewModel> GetFullList()
+
+        public void Delete(WarehouseBindingModel model)
         {
-            var result = new List<WarehouseViewModel>();
+            for (int i = 0; i < source.Warehouses.Count; ++i)
+            {
+                if (source.Warehouses[i].Id == model.Id)
+                {
+                    source.Warehouses.RemoveAt(i);
+                    return;
+                }
+            }
+            throw new Exception("Элемент не найден");
+        }
+
+        public WarehouseViewModel GetElement(WarehouseBindingModel model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
             foreach (var warehouse in source.Warehouses)
             {
-                result.Add(CreateModel(warehouse));
+                if (warehouse.Id == model.Id ||
+                    warehouse.WarehouseName == model.WarehouseName)
+                {
+                    return CreateModel(warehouse);
+                }
             }
-            return result;
+            return null;
         }
+
         public List<WarehouseViewModel> GetFilteredList(WarehouseBindingModel model)
         {
             if (model == null)
@@ -42,21 +65,17 @@ namespace AbstractBarListImplement.Implements
             }
             return result;
         }
-        public WarehouseViewModel GetElement(WarehouseBindingModel model)
+
+        public List<WarehouseViewModel> GetFullList()
         {
-            if (model == null)
+            var result = new List<WarehouseViewModel>();
+            foreach (var Component in source.Warehouses)
             {
-                return null;
+                result.Add(CreateModel(Component));
             }
-            foreach (var warehouse in source.Warehouses)
-            {
-                if (warehouse.Id == model.Id || warehouse.WarehouseName == model.WarehouseName)
-                {
-                    return CreateModel(warehouse);
-                }
-            }
-            return null;
+            return result;
         }
+
         public void Insert(WarehouseBindingModel model)
         {
             var tempWarehouse = new Warehouse { Id = 1, WarehouseComponents = new Dictionary<int, int>() };
@@ -69,6 +88,12 @@ namespace AbstractBarListImplement.Implements
             }
             source.Warehouses.Add(CreateModel(model, tempWarehouse));
         }
+
+        public bool TakeComponentFromWarehouse(Dictionary<int, (string, int)> Components, int orderCount)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(WarehouseBindingModel model)
         {
             Warehouse tempWarehouse = null;
@@ -85,19 +110,35 @@ namespace AbstractBarListImplement.Implements
             }
             CreateModel(model, tempWarehouse);
         }
-        public void Delete(WarehouseBindingModel model)
+
+        private WarehouseViewModel CreateModel(Warehouse warehouse)
         {
-            for (int i = 0; i < source.Warehouses.Count; ++i)
+            var warehouseComponents = new Dictionary<int, (string, int)>();
+            foreach (var warehouseComponent in warehouse.WarehouseComponents)
             {
-                if (source.Warehouses[i].Id == model.Id)
+                string ComponentName = string.Empty;
+                foreach (var Component in source.Components)
                 {
-                    source.Warehouses.RemoveAt(i);
-                    return;
+                    if (warehouseComponent.Key == Component.Id)
+                    {
+                        ComponentName = Component.ComponentName;
+                        break;
+                    }
                 }
+                warehouseComponents.Add(warehouseComponent.Key, (ComponentName, warehouseComponent.Value));
             }
-            throw new Exception("Элемент не найден");
+            return new WarehouseViewModel
+            {
+                Id = warehouse.Id,
+                WarehouseName = warehouse.WarehouseName,
+                ResponsiblePerson = warehouse.ResponsiblePerson,
+                DateCreate = warehouse.DateCreate,
+                WarehouseComponents = warehouseComponents
+            };
         }
-        private static Warehouse CreateModel(WarehouseBindingModel model, Warehouse warehouse)
+
+        private Warehouse CreateModel(WarehouseBindingModel model,
+            Warehouse warehouse)
         {
             warehouse.WarehouseName = model.WarehouseName;
             warehouse.ResponsiblePerson = model.ResponsiblePerson;
@@ -121,31 +162,6 @@ namespace AbstractBarListImplement.Implements
                 }
             }
             return warehouse;
-        }
-        private WarehouseViewModel CreateModel(Warehouse warehouse)
-        {
-            var warehouseComonents = new Dictionary<int, (string, int)>();
-            foreach (var pc in warehouse.WarehouseComponents)
-            {
-                string componentName = string.Empty;
-                foreach (var component in source.Components)
-                {
-                    if (pc.Key == component.Id)
-                    {
-                        componentName = component.ComponentName;
-                        break;
-                    }
-                }
-                warehouseComonents.Add(pc.Key, (componentName, pc.Value));
-            }
-            return new WarehouseViewModel
-            {
-                Id = warehouse.Id,
-                WarehouseName = warehouse.WarehouseName,
-                ResponsiblePerson = warehouse.ResponsiblePerson,
-                DateCreate = warehouse.DateCreate,
-                WarehouseComponents = warehouseComonents
-            };
         }
     }
 }

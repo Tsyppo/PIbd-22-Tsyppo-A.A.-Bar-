@@ -15,9 +15,73 @@ namespace AbstractBarBusinessLogic.BusinessLogics
     {
         private readonly IOrderStorage _orderStorage;
 
-        public OrderLogic(IOrderStorage orderStorage)
+        private readonly IWarehouseStorage _warehouseStorage;
+
+        private readonly ICocktailStorage _CocktailStorage;
+
+        public OrderLogic(IOrderStorage orderStorage, IWarehouseStorage warehouseStorage, ICocktailStorage CocktailStorage)
         {
             _orderStorage = orderStorage;
+            _warehouseStorage = warehouseStorage;
+            _CocktailStorage = CocktailStorage;
+        }
+
+        public void CreateOrder(CreateOrderBindingModel model)
+        {
+            _orderStorage.Insert(new OrderBindingModel
+            {
+                CocktailId = model.CocktailId,
+                Count = model.Count,
+                Sum = model.Sum,
+                DateCreate = DateTime.Now,
+                Status = OrderStatus.Принят
+            });
+        }
+
+        public void DeliveryOrder(ChangeStatusBindingModel model)
+        {
+            var order = _orderStorage.GetElement(new OrderBindingModel { Id = model.OrderId });
+            if (order == null)
+            {
+                throw new Exception("Не найден заказ");
+            }
+            if (order.Status != OrderStatus.Готов)
+            {
+                throw new Exception("Заказ не в статусе \"Готов\"");
+            }
+            _orderStorage.Update(new OrderBindingModel
+            {
+                Id = order.Id,
+                CocktailId = order.CocktailId,
+                Count = order.Count,
+                Sum = order.Sum,
+                DateCreate = order.DateCreate,
+                DateImplement = order.DateImplement,
+                Status = OrderStatus.Выдан
+            });
+        }
+
+        public void FinishOrder(ChangeStatusBindingModel model)
+        {
+            var order = _orderStorage.GetElement(new OrderBindingModel { Id = model.OrderId });
+            if (order == null)
+            {
+                throw new Exception("Не найден заказ");
+            }
+            if (order.Status != OrderStatus.Выполняется)
+            {
+                throw new Exception("Заказ не в статусе \"Выполняется\"");
+            }
+            _orderStorage.Update(new OrderBindingModel
+            {
+                Id = order.Id,
+                CocktailId = order.CocktailId,
+                Count = order.Count,
+                Sum = order.Sum,
+                DateCreate = order.DateCreate,
+                DateImplement = DateTime.Now,
+                Status = OrderStatus.Готов
+            });
         }
 
         public List<OrderViewModel> Read(OrderBindingModel model)
@@ -33,32 +97,21 @@ namespace AbstractBarBusinessLogic.BusinessLogics
             return _orderStorage.GetFilteredList(model);
         }
 
-        public void CreateOrder(CreateOrderBindingModel model)
-        {
-            _orderStorage.Insert(new OrderBindingModel
-            {
-                CocktailId = model.CocktailId,
-                Count = model.Count,
-                Sum = model.Sum,
-                DateCreate = DateTime.Now,
-                Status = OrderStatus.Принят
-            });
-        }
-
         public void TakeOrderInWork(ChangeStatusBindingModel model)
         {
-            var order = _orderStorage.GetElement(new OrderBindingModel
-            {
-                Id =model.OrderId
-            });
+            var order = _orderStorage.GetElement(new OrderBindingModel { Id = model.OrderId });
             if (order == null)
             {
                 throw new Exception("Не найден заказ");
             }
-            if (order.Status != Enum.GetName(typeof(OrderStatus), 0))
+            if (order.Status != OrderStatus.Принят)
             {
                 throw new Exception("Заказ не в статусе \"Принят\"");
             }
+            if (!_warehouseStorage.TakeComponentFromWarehouse(_CocktailStorage.GetElement(new CocktailBindingModel { Id = order.CocktailId }).CocktailComponents, order.Count))
+            {
+                throw new Exception("Недостаточно компонентов для принятия в работу заказа");
+            }
             _orderStorage.Update(new OrderBindingModel
             {
                 Id = order.Id,
@@ -66,60 +119,8 @@ namespace AbstractBarBusinessLogic.BusinessLogics
                 Count = order.Count,
                 Sum = order.Sum,
                 DateCreate = order.DateCreate,
-                DateImplement = DateTime.Now,
+                DateImplement = order.DateImplement,
                 Status = OrderStatus.Выполняется
-            });
-        }
-
-        public void FinishOrder(ChangeStatusBindingModel model)
-        {
-            var order = _orderStorage.GetElement(new OrderBindingModel
-            {
-                Id = model.OrderId
-            });
-            if (order == null)
-            {
-                throw new Exception("Не найден заказ");
-            }
-            if (order.Status != Enum.GetName(typeof(OrderStatus), 1))
-            {
-                throw new Exception("Заказ не в статусе \"Выполняется\"");
-            }
-            _orderStorage.Update(new OrderBindingModel
-            {
-                Id = order.Id,
-                CocktailId = order.CocktailId,
-                Count = order.Count,
-                Sum = order.Sum,
-                DateCreate = order.DateCreate,
-                DateImplement = order.DateImplement,
-                Status = OrderStatus.Готов
-            });
-        }
-
-        public void DeliveryOrder(ChangeStatusBindingModel model)
-        {
-            var order = _orderStorage.GetElement(new OrderBindingModel
-            {
-                Id = model.OrderId
-            });
-            if (order == null)
-            {
-                throw new Exception("Не найден заказ");
-            }
-            if (order.Status != Enum.GetName(typeof(OrderStatus), 2))
-            {
-                throw new Exception("Заказ не в статусе \"Готов\"");
-            }
-            _orderStorage.Update(new OrderBindingModel
-            {
-                Id = order.Id,
-                CocktailId = order.CocktailId,
-                Count = order.Count,
-                Sum = order.Sum,
-                DateCreate = order.DateCreate,
-                DateImplement = order.DateImplement,
-                Status = OrderStatus.Выдан
             });
         }
     }

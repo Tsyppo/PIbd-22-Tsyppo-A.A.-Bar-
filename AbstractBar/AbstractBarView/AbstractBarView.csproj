@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AbstractBarBusinessLogic\AbstractBarBusinessLogic.csproj" />
+    <ProjectReference Include="..\AbstractBarFileImplement\AbstractBarFileImplement.csproj" />
     <ProjectReference Include="..\AbstractBarListImplement\AbstractBarListImplement.csproj" />
   </ItemGroup>
 

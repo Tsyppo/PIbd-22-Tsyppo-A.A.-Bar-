@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AbstractBarListImplement.Models
+namespace AbstractBarFileImplement.Models
 {
     /// <summary>
     /// Изделие, изготавливаемое в магазине
