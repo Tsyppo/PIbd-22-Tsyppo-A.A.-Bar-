@@ -42,7 +42,6 @@ namespace AbstractBarBusinessLogic.BusinessLogics
         // Получение списка компонент с указанием, в каких изделиях используются
         public List<ReportCocktailComponentViewModel> GetCocktailComponent()
         {
-            var Components = _componentStorage.GetFullList();
             var Cocktails = _cocktailStorage.GetFullList();
             var list = new List<ReportCocktailComponentViewModel>();
             foreach (var Cocktail in Cocktails)

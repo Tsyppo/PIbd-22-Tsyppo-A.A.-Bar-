@@ -20,18 +20,7 @@ namespace AbstractBarListImplement.Implements
             source = DataListSingleton.GetInstance();
         }
 
-        public void Delete(OrderBindingModel model)
-        {
-            for (int i = 0; i < source.Orders.Count; ++i)
-            {
-                if (source.Orders[i].Id == model.Id)
-                {
-                    source.Orders.RemoveAt(i);
-                    return;
-                }
-            }
-            throw new Exception("Элемент не найден");
-        }
+
 
         public OrderViewModel GetElement(OrderBindingModel model)
         {
@@ -58,9 +47,9 @@ namespace AbstractBarListImplement.Implements
             List<OrderViewModel> result = new List<OrderViewModel>();
             foreach (var order in source.Orders)
             {
-                if (order.Id.Equals(model.Id) || ((!model.DateFrom.HasValue && !model.DateTo.HasValue && order.DateCreate.Date == model.DateCreate.Date) ||
+                if (order.Id.Equals(model.Id) || (!model.DateFrom.HasValue && !model.DateTo.HasValue && order.DateCreate.Date == model.DateCreate.Date) ||
                 (model.DateFrom.HasValue && model.DateTo.HasValue && order.DateCreate.Date >= model.DateFrom.Value.Date
-                && order.DateCreate.Date <= model.DateTo.Value.Date)))
+                && order.DateCreate.Date <= model.DateTo.Value.Date) || (model.ClientId.HasValue && order.ClientId == model.ClientId))
                 {
                     result.Add(CreateModel(order));
                 }
@@ -108,9 +97,23 @@ namespace AbstractBarListImplement.Implements
             CreateModel(model, tempOrder);
         }
 
+        public void Delete(OrderBindingModel model)
+        {
+            for (int i = 0; i < source.Orders.Count; ++i)
+            {
+                if (source.Orders[i].Id == model.Id)
+                {
+                    source.Orders.RemoveAt(i);
+                    return;
+                }
+            }
+            throw new Exception("Элемент не найден");
+        }
+
         private Order CreateModel(OrderBindingModel model, Order order)
         {
             order.CocktailId = model.CocktailId;
+            order.ClientId = (int)model.ClientId;
             order.Count = model.Count;
             order.Sum = model.Sum;
             order.Status = model.Status;
@@ -122,19 +125,32 @@ namespace AbstractBarListImplement.Implements
         private OrderViewModel CreateModel(Order order)
         {
             string CocktailName = null;
-            foreach (var Cocktail in source.Cocktails)
+            foreach (var garment in source.Cocktails)
             {
-                if (Cocktail.Id == order.CocktailId)
+                if (garment.Id == order.CocktailId)
                 {
-                    CocktailName = Cocktail.CocktailName;
+                    CocktailName = garment.CocktailName;
                     break;
                 }
             }
+
+            string clientFIO = null;
+            foreach (var client in source.Clients)
+            {
+                if (client.Id == order.CocktailId)
+                {
+                    clientFIO = client.ClientFIO;
+                    break;
+                }
+            }
+
             return new OrderViewModel
             {
                 Id = order.Id,
                 CocktailId = order.CocktailId,
                 CocktailName = CocktailName,
+                ClientId = order.ClientId,
+                ClientFIO = clientFIO,
                 Count = order.Count,
                 Sum = order.Sum,
                 Status = order.Status,

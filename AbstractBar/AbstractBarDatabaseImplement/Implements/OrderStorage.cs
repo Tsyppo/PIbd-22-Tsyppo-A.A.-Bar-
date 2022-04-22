@@ -16,23 +16,27 @@ namespace AbstractBarDatabaseImplement.Implements
         public List<OrderViewModel> GetFullList()
         {
             AbstractBarDatabase context = new AbstractBarDatabase();
-            return context.Orders.Include(rec => rec.Cocktail)
+            return context.Orders
+                .Include(rec => rec.Cocktail)
+                .Include(rec => rec.Client)
                 .Select(CreateModel)
                 .ToList();
         }
         public List<OrderViewModel> GetFilteredList(OrderBindingModel model)
         {
-            if (model == null)
             {
-                return null;
+                if (model == null)
+                {
+                    return null;
+                }
+                AbstractBarDatabase context = new AbstractBarDatabase();
+                return context.Orders.Include(rec => rec.Cocktail)
+                    .Where(rec => rec.CocktailId == model.CocktailId || (!model.DateFrom.HasValue && !model.DateTo.HasValue && rec.DateCreate.Date == model.DateCreate.Date) ||
+                    (model.DateFrom.HasValue && model.DateTo.HasValue && rec.DateCreate.Date >= model.DateFrom.Value.Date
+                    && rec.DateCreate.Date <= model.DateTo.Value.Date) || (model.ClientId.HasValue && rec.ClientId == model.ClientId))
+                    .Select(CreateModel)
+                    .ToList();
             }
-            AbstractBarDatabase context = new AbstractBarDatabase();
-            return context.Orders.Include(rec => rec.Cocktail)
-                .Where(rec => rec.CocktailId == model.CocktailId || (!model.DateFrom.HasValue && !model.DateTo.HasValue && rec.DateCreate.Date == model.DateCreate.Date) ||
-                (model.DateFrom.HasValue && model.DateTo.HasValue && rec.DateCreate.Date >= model.DateFrom.Value.Date
-                && rec.DateCreate.Date <= model.DateTo.Value.Date))
-                .Select(CreateModel)
-                .ToList();
         }
         public OrderViewModel GetElement(OrderBindingModel model)
         {
@@ -41,7 +45,9 @@ namespace AbstractBarDatabaseImplement.Implements
                 return null;
             }
             AbstractBarDatabase context = new AbstractBarDatabase();
-            Order order = context.Orders.Include(rec => rec.Cocktail)
+            Order order = context.Orders
+                .Include(rec => rec.Cocktail)
+                .Include(rec => rec.Client)
                  .FirstOrDefault(rec => rec.Id == model.Id);
             return order != null ?
             new OrderViewModel
@@ -49,6 +55,7 @@ namespace AbstractBarDatabaseImplement.Implements
                 Id = order.Id,
                 CocktailId = order.CocktailId,
                 CocktailName = order.Cocktail.CocktailName,
+                ClientId = order.ClientId,
                 Count = order.Count,
                 Sum = order.Sum,
                 Status = order.Status,
@@ -63,6 +70,7 @@ namespace AbstractBarDatabaseImplement.Implements
             Order order = new Order
             {
                 CocktailId = model.CocktailId,
+                ClientId = (int)model.ClientId,
                 Count = model.Count,
                 Sum = model.Sum,
                 Status = model.Status,
@@ -83,6 +91,7 @@ namespace AbstractBarDatabaseImplement.Implements
                 throw new Exception("Элемент не найден");
             }
             element.CocktailId = model.CocktailId;
+            element.ClientId = (int)model.ClientId;
             element.Count = model.Count;
             element.Sum = model.Sum;
             element.Status = model.Status;
@@ -133,11 +142,14 @@ namespace AbstractBarDatabaseImplement.Implements
 
         private static OrderViewModel CreateModel(Order order)
         {
+            AbstractBarDatabase context = new AbstractBarDatabase();
             return new OrderViewModel
             {
                 Id = order.Id,
                 CocktailId = order.CocktailId,
                 CocktailName = order.Cocktail.CocktailName,
+                ClientId = order.ClientId,
+                ClientFIO = context.Clients.Include(x => x.Orders).FirstOrDefault(x => x.Id == order.ClientId)?.ClientFIO,
                 Count = order.Count,
                 Sum = order.Sum,
                 Status = order.Status,
