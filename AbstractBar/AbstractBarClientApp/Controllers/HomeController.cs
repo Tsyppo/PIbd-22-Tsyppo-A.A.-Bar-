@@ -19,6 +19,7 @@ namespace AbstractBarClientApp.Controllers
             _logger = logger;
         }
 
+        //полный путь передачи информации в хранилище данных
         public IActionResult Index()
         {
             if (Program.Client == null)

@@ -92,6 +92,7 @@ namespace AbstractBarListImplement.Implements
             }
             CreateModel(model, tempOrder);
         }
+
         public void Delete(OrderBindingModel model)
         {
             for (int i = 0; i < source.Orders.Count; ++i)
@@ -104,6 +105,7 @@ namespace AbstractBarListImplement.Implements
             }
             throw new Exception("Элемент не найден");
         }
+
         private Order CreateModel(OrderBindingModel model, Order order)
         {
             order.CocktailId = model.CocktailId;
@@ -131,6 +133,7 @@ namespace AbstractBarListImplement.Implements
 
             string clientFIO = null;
             foreach (var client in source.Clients)
+
             {
                 if (client.Id == order.CocktailId)
                 {
@@ -148,6 +151,7 @@ namespace AbstractBarListImplement.Implements
                     break;
                 }
             }
+
             return new OrderViewModel
             {
                 Id = order.Id,

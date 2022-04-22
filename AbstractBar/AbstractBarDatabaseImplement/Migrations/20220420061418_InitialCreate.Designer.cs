@@ -4,14 +4,16 @@ using AbstractBarDatabaseImplement;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AbstractBarDatabaseImplement.Migrations
 {
     [DbContext(typeof(AbstractBarDatabase))]
-    partial class AbstractBarDatabaseModelSnapshot : ModelSnapshot
+    [Migration("20220420061418_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,28 +105,6 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.ToTable("Components");
                 });
 
-            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Implementer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ImplementerFIO")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PauseTime")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkingTime")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Implementers");
-                });
-
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -147,9 +127,6 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.Property<DateTime?>("DateImplement")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ImplementerId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -161,8 +138,6 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.HasIndex("ClientId");
 
                     b.HasIndex("CocktailId");
-
-                    b.HasIndex("ImplementerId");
 
                     b.ToTable("Orders");
                 });
@@ -199,20 +174,10 @@ namespace AbstractBarDatabaseImplement.Migrations
                         .HasForeignKey("CocktailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                    b.HasOne("AbstractBarDatabaseImplement.Models.Implementer", "Implementer")
-                        .WithMany("Orders")
-                        .HasForeignKey("ImplementerId");
 
                     b.Navigation("Client");
 
                     b.Navigation("Cocktail");
-
-                    b.Navigation("Implementer");
-                });
-
-            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Client", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Client", b =>
@@ -230,11 +195,6 @@ namespace AbstractBarDatabaseImplement.Migrations
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Component", b =>
                 {
                     b.Navigation("CocktailComponents");
-                });
-
-            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Implementer", b =>
-                {
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
