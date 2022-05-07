@@ -150,6 +150,5 @@ namespace AbstractBarView
         {
             FileDataListSingleton.GetInstance().SaveData();
         }
-
     }
 }

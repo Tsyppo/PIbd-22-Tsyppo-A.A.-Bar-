@@ -110,7 +110,6 @@ namespace AbstractBarListImplement.Implements
             }
             CreateModel(model, tempWarehouse);
         }
-
         private WarehouseViewModel CreateModel(Warehouse warehouse)
         {
             var warehouseComponents = new Dictionary<int, (string, int)>();
