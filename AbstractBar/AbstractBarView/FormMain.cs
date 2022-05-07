@@ -153,7 +153,6 @@ namespace AbstractBarView
         {
             FileDataListSingleton.GetInstance().SaveData();
         }
-
         private void списокИзделийToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using var dialog = new SaveFileDialog { Filter = "docx|*.docx" };
