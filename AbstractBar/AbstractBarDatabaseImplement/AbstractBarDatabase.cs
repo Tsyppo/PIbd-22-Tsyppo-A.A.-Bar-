@@ -13,6 +13,7 @@ namespace AbstractBarDatabaseImplement
             }
             base.OnConfiguring(optionsBuilder);
         }
+        public virtual DbSet<MessageInfo> Messages { set; get; }
         public virtual DbSet<Client> Clients { set; get; }
         public virtual DbSet<Implementer> Implementers { set; get; }
         public virtual DbSet<Component> Components { set; get; }

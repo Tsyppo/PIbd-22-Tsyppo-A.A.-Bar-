@@ -13,10 +13,12 @@ namespace AbstractBarRestApi.Controllers
     {
         private readonly IOrderLogic _order;
         private readonly ICocktailLogic _cocktail;
-        public MainController(IOrderLogic order, ICocktailLogic cocktail)
+        private readonly IMessageInfoLogic _messageInfo;
+        public MainController(IOrderLogic order, ICocktailLogic cocktail, IMessageInfoLogic messageInfo)
         {
             _order = order;
             _cocktail = cocktail;
+            _messageInfo = messageInfo;
         }
         [HttpGet]
         public List<CocktailViewModel> GetCocktailList() => _cocktail.Read(null)?.ToList();
@@ -25,6 +27,9 @@ namespace AbstractBarRestApi.Controllers
         { Id = cocktailId })?[0];
         [HttpGet]
         public List<OrderViewModel> GetOrders(int clientId) => _order.Read(new OrderBindingModel
+        { ClientId = clientId });
+        [HttpGet]
+        public List<MessageInfoViewModel> GetMessages(int clientId) => _messageInfo.Read(new MessageInfoBindingModel
         { ClientId = clientId });
         [HttpPost]
         public void CreateOrder(CreateOrderBindingModel model) => _order.CreateOrder(model);

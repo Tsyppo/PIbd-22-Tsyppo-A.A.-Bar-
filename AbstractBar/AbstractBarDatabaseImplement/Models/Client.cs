@@ -15,5 +15,7 @@ namespace AbstractBarDatabaseImplement.Models
         public string Password { get; set; }
         [ForeignKey("ClientId")]
         public List<Order> Orders { get; set; }
+        [ForeignKey("ClientId")]
+        public List<MessageInfo> MessageInfo { get; set; }
     }
 }

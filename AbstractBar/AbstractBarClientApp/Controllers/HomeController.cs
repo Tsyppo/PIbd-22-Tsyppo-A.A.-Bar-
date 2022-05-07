@@ -19,7 +19,6 @@ namespace AbstractBarClientApp.Controllers
             _logger = logger;
         }
 
-        //полный путь передачи информации в хранилище данных
         public IActionResult Index()
         {
             if (Program.Client == null)
@@ -147,6 +146,16 @@ namespace AbstractBarClientApp.Controllers
         {
             CocktailViewModel cc = APIClient.GetRequest<CocktailViewModel>($"api/main/getcocktail?cocktailId={cocktail}");
             return count * cc.Price;
+        }
+        [HttpGet]
+        public IActionResult Messages()
+        {
+            if (Program.Client == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return View(APIClient.GetRequest<List<MessageInfoViewModel>>
+                ($"api/main/getmessages?clientId={Program.Client.Id}"));
         }
     }
 }

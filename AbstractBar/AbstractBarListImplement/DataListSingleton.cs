@@ -15,6 +15,7 @@ namespace AbstractBarListImplement
         public List<Order> Orders { get; set; }
         public List<Cocktail> Cocktails { get; set; }
         public List<Implementer> Implementers { get; set; }
+        public List<MessageInfo> Messages { get; set; }
         private DataListSingleton()
         {
             Components = new List<Component>();
@@ -22,6 +23,7 @@ namespace AbstractBarListImplement
             Cocktails = new List<Cocktail>();
             Clients = new List<Client>();
             Implementers = new List<Implementer>();
+            Messages = new List<MessageInfo>();
         }
         public static DataListSingleton GetInstance()
         {

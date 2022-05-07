@@ -125,6 +125,33 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.ToTable("Implementers");
                 });
 
+            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.MessageInfo", b =>
+                {
+                    b.Property<string>("MessageId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateDelivery")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SenderName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -186,6 +213,15 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.Navigation("Component");
                 });
 
+            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.MessageInfo", b =>
+                {
+                    b.HasOne("AbstractBarDatabaseImplement.Models.Client", "Client")
+                        .WithMany("MessageInfo")
+                        .HasForeignKey("ClientId");
+
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Order", b =>
                 {
                     b.HasOne("AbstractBarDatabaseImplement.Models.Client", "Client")
@@ -199,6 +235,7 @@ namespace AbstractBarDatabaseImplement.Migrations
                         .HasForeignKey("CocktailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
                     b.HasOne("AbstractBarDatabaseImplement.Models.Implementer", "Implementer")
                         .WithMany("Orders")
                         .HasForeignKey("ImplementerId");
@@ -212,11 +249,8 @@ namespace AbstractBarDatabaseImplement.Migrations
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Client", b =>
                 {
-                    b.Navigation("Orders");
-                });
+                    b.Navigation("MessageInfo");
 
-            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Client", b =>
-                {
                     b.Navigation("Orders");
                 });
 
