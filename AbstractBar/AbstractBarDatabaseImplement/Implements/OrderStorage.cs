@@ -28,7 +28,9 @@ namespace AbstractBarDatabaseImplement.Implements
             }
             AbstractBarDatabase context = new AbstractBarDatabase();
             return context.Orders.Include(rec => rec.Cocktail)
-                .Where(rec => rec.CocktailId == model.CocktailId)
+                .Where(rec => rec.CocktailId == model.CocktailId || (!model.DateFrom.HasValue && !model.DateTo.HasValue && rec.DateCreate.Date == model.DateCreate.Date) ||
+                (model.DateFrom.HasValue && model.DateTo.HasValue && rec.DateCreate.Date >= model.DateFrom.Value.Date
+                && rec.DateCreate.Date <= model.DateTo.Value.Date))
                 .Select(CreateModel)
                 .ToList();
         }

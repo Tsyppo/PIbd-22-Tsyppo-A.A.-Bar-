@@ -118,7 +118,10 @@ namespace AbstractBarFileImplement.Implements
                 Id = Cocktail.Id,
                 CocktailName = Cocktail.CocktailName,
                 Price = Cocktail.Price,
-                CocktailComponents = Cocktail.CocktailComponents.ToDictionary(recGT => recGT.Key, recGT => (source.Components.FirstOrDefault(recT => recT.Id == recGT.Key)?.ComponentName, recGT.Value))
+                CocktailComponents = Cocktail.CocktailComponents
+            .ToDictionary(recGT => recGT.Key, recGT =>
+            (source.Components.FirstOrDefault(recC => recC.Id ==
+            recGT.Key)?.ComponentName, recGT.Value))
             };
         }
     }
