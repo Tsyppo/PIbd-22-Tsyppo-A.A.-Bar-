@@ -1,9 +1,14 @@
-using System;
-using System.Windows.Forms;
+using AbstractBarDatabaseImplement.Implements;
 using AbstractBarBusinessLogic.BusinessLogics;
+using AbstractBarBusinessLogic.OfficePackage;
+using AbstractBarBusinessLogic.OfficePackage.Implements;
 using AbstractBarContracts.BusinessLogicsContracts;
 using AbstractBarContracts.StoragesContracts;
-using AbstractBarFileImplement.Implements;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Unity;
 using Unity.Lifetime;
 
@@ -34,16 +39,24 @@ namespace AbstractBarView
             HierarchicalLifetimeManager());
             currentContainer.RegisterType<ICocktailStorage, CocktailStorage>(new
             HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IWarehouseStorage, WarehouseStorage>(new
-            HierarchicalLifetimeManager());
             currentContainer.RegisterType<IComponentLogic, ComponentLogic>(new
             HierarchicalLifetimeManager());
             currentContainer.RegisterType<IOrderLogic, OrderLogic>(new
             HierarchicalLifetimeManager());
             currentContainer.RegisterType<ICocktailLogic, CocktailLogic>(new
             HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IReportLogic, ReportLogic>(new
+          HierarchicalLifetimeManager());
+            currentContainer.RegisterType<AbstractSaveToExcel, SaveToExcel>(new
+                HierarchicalLifetimeManager());
+            currentContainer.RegisterType<AbstractSaveToPdf, SaveToPdf>(new
+                HierarchicalLifetimeManager());
+            currentContainer.RegisterType<AbstractSaveToWord, SaveToWord>(new
+                HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IWarehouseStorage, WarehouseStorage>(new
+           HierarchicalLifetimeManager());
             currentContainer.RegisterType<IWarehouseLogic, WarehouseLogic>(new
-               HierarchicalLifetimeManager());
+            HierarchicalLifetimeManager());
             return currentContainer;
         }
 

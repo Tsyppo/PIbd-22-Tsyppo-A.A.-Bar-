@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AbstractBarContracts.Enums;
 
-namespace AbstractBarContracts.BindingModels
+namespace AbstractBarDatabaseImplement.Models
 {
-    /// <summary>
-    /// Заказ
-    /// </summary>
-    public class OrderBindingModel
+    public class Order
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public int CocktailId { get; set; }
+        [Required]
         public int Count { get; set; }
+        [Required]
         public decimal Sum { get; set; }
+        [Required]
         public OrderStatus Status { get; set; }
+        [Required]
         public DateTime DateCreate { get; set; }
         public DateTime? DateImplement { get; set; }
-        public DateTime? DateFrom { get; set; }
-        public DateTime? DateTo { get; set; }
+        public virtual Cocktail Cocktail { get; set; }
     }
 }
