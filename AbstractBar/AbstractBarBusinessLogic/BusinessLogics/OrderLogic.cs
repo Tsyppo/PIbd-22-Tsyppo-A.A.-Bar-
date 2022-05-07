@@ -7,6 +7,7 @@ using AbstractBarContracts.BindingModels;
 using AbstractBarContracts.BusinessLogicsContracts;
 using AbstractBarContracts.StoragesContracts;
 using AbstractBarContracts.ViewModels;
+using AbstractBarBusinessLogic.MailWorker;
 using AbstractBarContracts.Enums;
 
 namespace AbstractBarBusinessLogic.BusinessLogics
@@ -14,10 +15,14 @@ namespace AbstractBarBusinessLogic.BusinessLogics
     public class OrderLogic : IOrderLogic
     {
         private readonly IOrderStorage _orderStorage;
+        private readonly IClientStorage _clientStorage;
+        private readonly AbstractMailWorker _mailWorker;
 
-        public OrderLogic(IOrderStorage orderStorage)
+        public OrderLogic(IOrderStorage orderStorage, IClientStorage clientStorage, AbstractMailWorker mailWorker)
         {
             _orderStorage = orderStorage;
+            _mailWorker = mailWorker;
+            _clientStorage = clientStorage;
         }
 
         public void CreateOrder(CreateOrderBindingModel model)
@@ -30,7 +35,13 @@ namespace AbstractBarBusinessLogic.BusinessLogics
                 Sum = model.Sum,
                 DateCreate = DateTime.Now,
                 Status = OrderStatus.Принят
-            }); ;
+            });
+            _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+            {
+                MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = model.ClientId })?.Login,
+                Subject = "Заказ создан",
+                Text = $"Дата: {DateTime.Now}, сумма: {model.Sum}"
+            });
         }
 
         public void DeliveryOrder(ChangeStatusBindingModel model)
@@ -56,6 +67,12 @@ namespace AbstractBarBusinessLogic.BusinessLogics
                 DateImplement = order.DateImplement,
                 Status = OrderStatus.Выдан
             });
+            _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+            {
+                MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = order.ClientId })?.Login,
+                Subject = "Заказ выдан",
+                Text = $"Заказ №{order.Id} выдан, Дата: {DateTime.Now}"
+            });
         }
 
         public void FinishOrder(ChangeStatusBindingModel model)
@@ -80,6 +97,12 @@ namespace AbstractBarBusinessLogic.BusinessLogics
                 DateCreate = order.DateCreate,
                 DateImplement = DateTime.Now,
                 Status = OrderStatus.Готов
+            });
+            _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+            {
+                MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = order.ClientId })?.Login,
+                Subject = "Заказ готов!",
+                Text = $"Заказ №{order.Id} готов, Дата: {DateTime.Now}"
             });
         }
 
@@ -118,6 +141,12 @@ namespace AbstractBarBusinessLogic.BusinessLogics
                 DateCreate = order.DateCreate,
                 DateImplement = order.DateImplement,
                 Status = OrderStatus.Выполняется
+            });
+            _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+            {
+                MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = order.ClientId })?.Login,
+                Subject = "Заказ выполняется",
+                Text = $"Заказ №{order.Id} выполняется, Дата: {DateTime.Now}"
             });
         }
     }
