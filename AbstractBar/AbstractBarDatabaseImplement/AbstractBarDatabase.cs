@@ -14,6 +14,7 @@ namespace AbstractBarDatabaseImplement
             base.OnConfiguring(optionsBuilder);
         }
         public virtual DbSet<Warehouse> Warehouses { get; set; }
+        public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<WarehouseComponent> WarehouseComponents { get; set; }
         public virtual DbSet<Component> Components { set; get; }
         public virtual DbSet<Cocktail> Cocktails { set; get; }
