@@ -9,6 +9,8 @@ using AbstractBarBusinessLogic.BusinessLogics;
 using AbstractBarContracts.BusinessLogicsContracts;
 using AbstractBarContracts.StoragesContracts;
 using AbstractBarContracts.BindingModels;
+using AbstractBarContracts.Attributes;
+using AbstractBarContracts.ViewModels;
 using AbstractBarDatabaseImplement.Implements;
 using AbstractBarBusinessLogic.OfficePackage;
 using AbstractBarBusinessLogic.OfficePackage.Implements;
@@ -97,8 +99,64 @@ namespace AbstractBarView
             HierarchicalLifetimeManager());
             currentContainer.RegisterType<IMessageInfoStorage, MessageInfoStorage>(new
             HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IBackUpInfo, BackUpInfo>(new
+            HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IBackUpLogic, BackUpLogic>(new
+            HierarchicalLifetimeManager());
             return currentContainer;
         }
         private static void MailCheck(object obj) => Container.Resolve<AbstractMailWorker>().MailCheck();
+
+        public static void ConfigGrid<T>(List<T> data, DataGridView grid)
+        {
+            var type = typeof(T);
+            var config = new List<string>();
+            grid.Columns.Clear();
+            foreach (var prop in type.GetProperties())
+            {
+                var attributes =
+                prop.GetCustomAttributes(typeof(ColumnAttribute), true);
+                if (attributes != null && attributes.Length > 0)
+                {
+                    foreach (var attr in attributes)
+                    {
+                        if (attr is ColumnAttribute columnAttr)
+                        {
+                            config.Add(prop.Name);
+                            var column = new DataGridViewTextBoxColumn
+                            {
+                                Name = prop.Name,
+                                ReadOnly = true,
+                                HeaderText = columnAttr.Title,
+                                Visible = columnAttr.Visible,
+                                Width = columnAttr.Width
+                            };
+                            if (columnAttr.GridViewAutoSize != GridViewAutoSize.None)
+                            {
+                                column.AutoSizeMode =
+                                (DataGridViewAutoSizeColumnMode)Enum.Parse(typeof(DataGridViewAutoSizeColumnMode),
+                                columnAttr.GridViewAutoSize.ToString());
+                            }
+                            grid.Columns.Add(column);
+                        }
+                    }
+                }
+            }
+            foreach (var elem in data)
+            {
+                var objs = new List<object>();
+                foreach (var conf in config)
+                {
+                    var value =
+                    elem.GetType().GetProperty(conf).GetValue(elem);
+                    if (value is Dictionary<int, (string, int)>)
+                    {
+                        objs.Add(((CocktailViewModel)(object)elem).GetComponents());
+                    }
+                    objs.Add(value);
+                }
+                grid.Rows.Add(objs.ToArray());
+            }
+        }
     }
 }

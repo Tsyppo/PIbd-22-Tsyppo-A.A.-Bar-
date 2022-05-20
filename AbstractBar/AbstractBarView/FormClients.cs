@@ -7,12 +7,12 @@ namespace AbstractBarView
 {
     public partial class FormClients : Form
     {
-        private readonly IClientLogic _logicС;
+        private readonly IClientLogic _logic;
 
-        public FormClients(IClientLogic logicC)
+        public FormClients(IClientLogic logic)
         {
             InitializeComponent();
-            _logicС = logicC;
+            _logic = logic;
         }
 
         private void FormClients_Load(object sender, EventArgs e)
@@ -24,13 +24,7 @@ namespace AbstractBarView
         {
             try
             {
-                var list = _logicС.Read(null);
-                if (list != null)
-                {
-                    dataGridView.DataSource = list;
-                    dataGridView.Columns[0].Visible = false;
-                    dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                }
+                Program.ConfigGrid(_logic.Read(null), dataGridView);
             }
             catch (Exception ex)
             {
@@ -54,7 +48,7 @@ namespace AbstractBarView
                     int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                     try
                     {
-                        _logicС.Delete(new ClientBindingModel { Id = id });
+                        _logic.Delete(new ClientBindingModel { Id = id });
                     }
                     catch (Exception ex)
                     {
