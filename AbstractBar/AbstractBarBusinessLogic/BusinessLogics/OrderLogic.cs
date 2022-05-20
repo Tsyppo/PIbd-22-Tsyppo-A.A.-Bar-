@@ -53,6 +53,7 @@ namespace AbstractBarBusinessLogic.BusinessLogics
             {
                 Id = order.Id,
                 CocktailId = order.CocktailId,
+                ClientId = order.ClientId,
                 Count = order.Count,
                 Sum = order.Sum,
                 DateCreate = order.DateCreate,
@@ -76,6 +77,7 @@ namespace AbstractBarBusinessLogic.BusinessLogics
             {
                 Id = order.Id,
                 CocktailId = order.CocktailId,
+                ClientId = order.ClientId,
                 Count = order.Count,
                 Sum = order.Sum,
                 DateCreate = order.DateCreate,
@@ -116,6 +118,7 @@ namespace AbstractBarBusinessLogic.BusinessLogics
             {
                 Id = order.Id,
                 CocktailId = order.CocktailId,
+                ClientId = order.ClientId,
                 Count = order.Count,
                 Sum = order.Sum,
                 DateCreate = order.DateCreate,

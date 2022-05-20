@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AbstractBarDatabaseImplement.Migrations
 {
     [DbContext(typeof(AbstractBarDatabase))]
-    [Migration("20220504064159_InitialCreate")]
+    [Migration("20220518074233_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,8 +18,32 @@ namespace AbstractBarDatabaseImplement.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.16")
+                .HasAnnotation("ProductVersion", "5.0.14")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Client", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClientFIO")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clients");
+                });
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Cocktail", b =>
                 {
@@ -88,6 +112,9 @@ namespace AbstractBarDatabaseImplement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CocktailId")
                         .HasColumnType("int");
 
@@ -107,6 +134,8 @@ namespace AbstractBarDatabaseImplement.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("CocktailId");
 
@@ -182,6 +211,10 @@ namespace AbstractBarDatabaseImplement.Migrations
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Order", b =>
                 {
+                    b.HasOne("AbstractBarDatabaseImplement.Models.Client", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("ClientId");
+
                     b.HasOne("AbstractBarDatabaseImplement.Models.Cocktail", "Cocktail")
                         .WithMany("Orders")
                         .HasForeignKey("CocktailId")
@@ -208,6 +241,11 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.Navigation("Component");
 
                     b.Navigation("Warehouse");
+                });
+
+            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Client", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Cocktail", b =>

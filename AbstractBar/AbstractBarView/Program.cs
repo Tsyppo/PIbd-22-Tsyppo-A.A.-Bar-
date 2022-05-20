@@ -46,15 +46,15 @@ namespace AbstractBarView
             currentContainer.RegisterType<ICocktailLogic, CocktailLogic>(new
             HierarchicalLifetimeManager());
             currentContainer.RegisterType<IReportLogic, ReportLogic>(new
-          HierarchicalLifetimeManager());
+            HierarchicalLifetimeManager());
             currentContainer.RegisterType<AbstractSaveToExcel, SaveToExcel>(new
-                HierarchicalLifetimeManager());
+            HierarchicalLifetimeManager());
             currentContainer.RegisterType<AbstractSaveToPdf, SaveToPdf>(new
-                HierarchicalLifetimeManager());
+            HierarchicalLifetimeManager());
             currentContainer.RegisterType<AbstractSaveToWord, SaveToWord>(new
-                HierarchicalLifetimeManager());
+            HierarchicalLifetimeManager());
             currentContainer.RegisterType<IWarehouseStorage, WarehouseStorage>(new
-           HierarchicalLifetimeManager());
+            HierarchicalLifetimeManager());
             currentContainer.RegisterType<IWarehouseLogic, WarehouseLogic>(new
             HierarchicalLifetimeManager());
             return currentContainer;

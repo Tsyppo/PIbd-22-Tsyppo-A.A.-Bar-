@@ -13,7 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbstractBarListImplement", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbstractBarFileImplement", "AbstractBarFileImplement\AbstractBarFileImplement.csproj", "{C7E59577-F687-4DB7-9C50-66779D1C7FF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractBarDatabaseImplement", "AbstractBarDatabaseImplement\AbstractBarDatabaseImplement.csproj", "{BF02AB50-40D9-4ABF-90EE-88D49D9C66F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbstractBarDatabaseImplement", "AbstractBarDatabaseImplement\AbstractBarDatabaseImplement.csproj", "{BF02AB50-40D9-4ABF-90EE-88D49D9C66F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbstractBarRestApi", "AbstractBarRestApi\AbstractBarRestApi.csproj", "{EAFBC7CB-1928-46F1-B5CD-1C978AD17EA1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbstractBarClientApp", "AbstractBarClientApp\AbstractBarClientApp.csproj", "{5B7D335D-955F-40C8-95F2-50557DBA99DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractBarWarehouseApp", "AbstractBarWarehouseApp\AbstractBarWarehouseApp.csproj", "{77ED9D0D-9969-48C0-97AF-546327F3A011}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +51,18 @@ Global
 		{BF02AB50-40D9-4ABF-90EE-88D49D9C66F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF02AB50-40D9-4ABF-90EE-88D49D9C66F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF02AB50-40D9-4ABF-90EE-88D49D9C66F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAFBC7CB-1928-46F1-B5CD-1C978AD17EA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAFBC7CB-1928-46F1-B5CD-1C978AD17EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAFBC7CB-1928-46F1-B5CD-1C978AD17EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAFBC7CB-1928-46F1-B5CD-1C978AD17EA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B7D335D-955F-40C8-95F2-50557DBA99DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B7D335D-955F-40C8-95F2-50557DBA99DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B7D335D-955F-40C8-95F2-50557DBA99DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B7D335D-955F-40C8-95F2-50557DBA99DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77ED9D0D-9969-48C0-97AF-546327F3A011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77ED9D0D-9969-48C0-97AF-546327F3A011}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77ED9D0D-9969-48C0-97AF-546327F3A011}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77ED9D0D-9969-48C0-97AF-546327F3A011}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
