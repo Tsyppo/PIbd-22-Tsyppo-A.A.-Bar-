@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AbstractBarDatabaseImplement.Migrations
 {
     [DbContext(typeof(AbstractBarDatabase))]
-    [Migration("20220504062846_InitialCreate")]
+    [Migration("20220517152334_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
