@@ -13,10 +13,12 @@ namespace AbstractBarFileImplement.Implements
     public class OrderStorage : IOrderStorage
     {
         private readonly FileDataListSingleton source;
+
         public OrderStorage()
         {
             source = FileDataListSingleton.GetInstance();
         }
+
         public OrderViewModel GetElement(OrderBindingModel model)
         {
             if (model == null)
@@ -34,9 +36,12 @@ namespace AbstractBarFileImplement.Implements
                 return null;
             }
             return source.Orders
-                .Where(rec => rec.CocktailId.ToString().Contains(model.CocktailId.ToString()) || ((!model.DateFrom.HasValue && !model.DateTo.HasValue && rec.DateCreate.Date == model.DateCreate.Date) ||
-                (model.DateFrom.HasValue && model.DateTo.HasValue && rec.DateCreate.Date >= model.DateFrom.Value.Date
-                && rec.DateCreate.Date <= model.DateTo.Value.Date)))
+                .Where(rec => rec.CocktailId.ToString().Contains(model.CocktailId.ToString())
+                    || (!model.DateFrom.HasValue && !model.DateTo.HasValue && rec.DateCreate.Date == model.DateCreate.Date)
+                    || (model.DateFrom.HasValue && model.DateTo.HasValue && rec.DateCreate.Date >= model.DateFrom.Value.Date && rec.DateCreate.Date <= model.DateTo.Value.Date)
+                    || (model.ClientId.HasValue && rec.ClientId == model.ClientId)
+                    || (model.SearchStatus.HasValue && !rec.ImplementerId.HasValue)
+                    || (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId && rec.Status == OrderStatus.Выполняется))
                 .Select(CreateModel)
                 .ToList();
         }
@@ -77,11 +82,13 @@ namespace AbstractBarFileImplement.Implements
         private Order CreateModel(OrderBindingModel model, Order order)
         {
             order.CocktailId = model.CocktailId;
+            order.ClientId = (int)model.ClientId;
             order.Count = model.Count;
             order.Sum = model.Sum;
             order.Status = model.Status;
             order.DateCreate = model.DateCreate;
             order.DateImplement = model.DateImplement;
+            order.ImplementerId = model.ImplementerId;
             return order;
         }
         private OrderViewModel CreateModel(Order order)
@@ -89,13 +96,17 @@ namespace AbstractBarFileImplement.Implements
             return new OrderViewModel
             {
                 Id = order.Id,
+                ClientId = order.ClientId,
+                ClientFIO = source.Clients.FirstOrDefault(rec => rec.Id == order.ClientId)?.ClientFIO,
                 CocktailId = order.CocktailId,
-                CocktailName = source.Cocktails.FirstOrDefault(Cocktail => Cocktail.Id == order.CocktailId)?.CocktailName,
+                CocktailName = source.Cocktails.FirstOrDefault(x => x.Id == order.CocktailId)?.CocktailName,
                 Count = order.Count,
                 Sum = order.Sum,
-                Status = order.Status,
                 DateCreate = order.DateCreate,
+                Status = order.Status,
                 DateImplement = order.DateImplement,
+                ImplementerId = order.ImplementerId.HasValue ? order.ImplementerId : null,
+                ImplementerFIO = order.ImplementerId.HasValue ? source.Implementers.FirstOrDefault(rec => rec.Id == order.ImplementerId)?.ImplementerFIO : string.Empty
             };
         }
     }

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AbstractBarContracts.Enums;
 using AbstractBarFileImplement.Models;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace AbstractBarFileImplement
@@ -16,15 +19,13 @@ namespace AbstractBarFileImplement
         private readonly string CocktailFileName = "Cocktail.xml";
         private readonly string WarehouseFileName = "Warehouse.xml";
         private readonly string ClientFileName = "Client.xml";
-        public List<Component> Components { get; set; }
-
-        public List<Order> Orders { get; set; }
-
-        public List<Cocktail> Cocktails { get; set; }
-
+        private readonly string ImplementerFileName = "Implementer.xml";
+        public List<Implementer> Implementers { get; set; }
         public List<Warehouse> Warehouses { get; set; }
         public List<Client> Clients { get; set; }
-
+        public List<Component> Components { get; set; }
+        public List<Order> Orders { get; set; }
+        public List<Cocktail> Cocktails { get; set; }
         private FileDataListSingleton()
         {
             Components = LoadComponents();
@@ -32,15 +33,7 @@ namespace AbstractBarFileImplement
             Cocktails = LoadCocktails();
             Clients = LoadClients();
             Warehouses = LoadWarehouses();
-        }
-
-        public void SaveData()
-        {
-            SaveComponents();
-            SaveOrders();
-            SaveCocktails();
-            SaveClients();
-            SaveWarehouses();
+            Implementers = LoadImplementers();
         }
         public static FileDataListSingleton GetInstance()
         {
@@ -49,6 +42,34 @@ namespace AbstractBarFileImplement
                 instance = new FileDataListSingleton();
             }
             return instance;
+        }
+        ~FileDataListSingleton()
+        {
+            SaveComponents();
+            SaveOrders();
+            SaveCocktails();
+            SaveClients();
+            SaveImplementers();
+        }
+        private List<Implementer> LoadImplementers()
+        {
+            var list = new List<Implementer>();
+            if (File.Exists(ImplementerFileName))
+            {
+                var xDocument = XDocument.Load(ImplementerFileName);
+                var xElements = xDocument.Root.Elements("Imlementer").ToList();
+                foreach (var elem in xElements)
+                {
+                    list.Add(new Implementer
+                    {
+                        Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                        ImplementerFIO = elem.Attribute("ImplementerFIO").Value,
+                        PauseTime = Convert.ToInt32(elem.Attribute("PauseTime").Value),
+                        WorkingTime = Convert.ToInt32(elem.Attribute("WorkingTime").Value)
+                    });
+                }
+            }
+            return list;
         }
         private List<Client> LoadClients()
         {
@@ -97,18 +118,34 @@ namespace AbstractBarFileImplement
                 var xElements = xDocument.Root.Elements("Order").ToList();
                 foreach (var elem in xElements)
                 {
-                    list.Add(new Order
+                    var dateImpl = elem.Element("DateImplement").Value;
+                    if (dateImpl != string.Empty)
                     {
-                        Id = Convert.ToInt32(elem.Attribute("Id").Value),
-                        CocktailId = Convert.ToInt32(elem.Element("CocktailId").Value),
-                        Count = Convert.ToInt32(elem.Element("Count").Value),
-                        Sum = Convert.ToDecimal(elem.Element("Sum").Value),
-                        Status = (OrderStatus)Enum.Parse(typeof(OrderStatus), elem.Element("Status").Value),
-                        DateCreate = Convert.ToDateTime(elem.Element("DateCreate").Value),
-                        DateImplement = string.IsNullOrEmpty(elem.Element("DateImplement").Value) ? (DateTime?)null :
-                        Convert.ToDateTime(elem.Element("DateImplement").Value),
-                    });
-                };
+                        list.Add(new Order
+                        {
+                            Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                            CocktailId = Convert.ToInt32(elem.Element("CocktailId").Value),
+                            Count = Convert.ToInt32(elem.Element("Count").Value),
+                            Sum = Convert.ToDecimal(elem.Element("Sum").Value),
+                            Status = (OrderStatus)Enum.Parse(typeof(OrderStatus), elem.Element("Status").Value),
+                            DateCreate = Convert.ToDateTime(elem.Element("DateCreate").Value),
+                            DateImplement = string.IsNullOrEmpty(elem.Element("DateImplement").Value) ? (DateTime?)null :
+                            Convert.ToDateTime(elem.Element("DateImplement").Value),
+                        });
+                    }
+                    else
+                    {
+                        list.Add(new Order
+                        {
+                            Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                            CocktailId = Convert.ToInt32(elem.Element("CocktailId").Value),
+                            Count = Convert.ToInt32(elem.Element("Count").Value),
+                            Sum = Convert.ToDecimal(elem.Element("Sum").Value),
+                            Status = (OrderStatus)Enum.Parse(typeof(OrderStatus), elem.Element("Status").Value),
+                            DateCreate = Convert.ToDateTime(elem.Element("DateCreate").Value)
+                        });
+                    }
+                }
             }
             return list;
         }
@@ -121,24 +158,25 @@ namespace AbstractBarFileImplement
                 var xElements = xDocument.Root.Elements("Cocktail").ToList();
                 foreach (var elem in xElements)
                 {
-                    var CocktailComponents = new Dictionary<int, int>();
-                    foreach (var Component in
+                    var cocktailComp = new Dictionary<int, int>();
+                    foreach (var component in
                    elem.Element("CocktailComponents").Elements("CocktailComponent").ToList())
                     {
-                        CocktailComponents.Add(Convert.ToInt32(Component.Element("Key").Value),
-                       Convert.ToInt32(Component.Element("Value").Value));
+                        cocktailComp.Add(Convert.ToInt32(component.Element("Key").Value),
+                       Convert.ToInt32(component.Element("Value").Value));
                     }
                     list.Add(new Cocktail
                     {
                         Id = Convert.ToInt32(elem.Attribute("Id").Value),
                         CocktailName = elem.Element("CocktailName").Value,
                         Price = Convert.ToDecimal(elem.Element("Price").Value),
-                        CocktailComponents = CocktailComponents
+                        CocktailComponents = cocktailComp
                     });
                 }
             }
             return list;
         }
+
         private List<Warehouse> LoadWarehouses()
         {
             var list = new List<Warehouse>();
@@ -148,23 +186,37 @@ namespace AbstractBarFileImplement
                 var xElements = xDocument.Root.Elements("Warehouse").ToList();
                 foreach (var elem in xElements)
                 {
-                    var CocktailComponent = new Dictionary<int, int>();
-                    foreach (var Component in elem.Element("WarehouseComponents").Elements("WarehouseComponent").ToList())
+                    var garmentTextile = new Dictionary<int, int>();
+                    foreach (var textile in elem.Element("WarehouseTextiles").Elements("WarehouseTextile").ToList())
                     {
-                        CocktailComponent.Add(Convert.ToInt32(Component.Element("Key").Value),
-                       Convert.ToInt32(Component.Element("Value").Value));
+                        garmentTextile.Add(Convert.ToInt32(textile.Element("Key").Value),
+                       Convert.ToInt32(textile.Element("Value").Value));
                     }
                     list.Add(new Warehouse
                     {
                         Id = Convert.ToInt32(elem.Attribute("Id").Value),
                         WarehouseName = elem.Element("WarehouseName").Value,
-                        ResponsiblePerson = elem.Element("ResponsibleFullName").Value,
-                        DateCreate = Convert.ToDateTime(elem.Element("CreateDate").Value),
-                        WarehouseComponents = CocktailComponent
+                        ResponsiblePerson = elem.Element("ResponsiblePerson").Value,
+                        DateCreate = Convert.ToDateTime(elem.Element("DateCreate").Value),
+                        WarehouseComponents = garmentTextile
                     });
                 }
             }
             return list;
+        }
+        private void SaveImplementers()
+        {
+            var xElement = new XElement("Implementers");
+            foreach (var implementer in Implementers)
+            {
+                xElement.Add(new XElement("Implementer",
+                    new XAttribute("Id", implementer.Id),
+                    new XAttribute("ImplementerFIO", implementer.ImplementerFIO),
+                    new XAttribute("WorkingTime", implementer.WorkingTime),
+                    new XAttribute("PauseTime", implementer.PauseTime)));
+            }
+            var xDocument = new XDocument(xElement);
+            xDocument.Save(ImplementerFileName);
         }
         private void SaveClients()
         {
@@ -188,11 +240,11 @@ namespace AbstractBarFileImplement
             if (Components != null)
             {
                 var xElement = new XElement("Components");
-                foreach (var Component in Components)
+                foreach (var component in Components)
                 {
                     xElement.Add(new XElement("Component",
-                    new XAttribute("Id", Component.Id),
-                    new XElement("ComponentName", Component.ComponentName)));
+                    new XAttribute("Id", component.Id),
+                    new XElement("ComponentName", component.ComponentName)));
                 }
                 var xDocument = new XDocument(xElement);
                 xDocument.Save(ComponentFileName);
@@ -223,20 +275,20 @@ namespace AbstractBarFileImplement
             if (Cocktails != null)
             {
                 var xElement = new XElement("Cocktails");
-                foreach (var Cocktail in Cocktails)
+                foreach (var cocktail in Cocktails)
                 {
-                    var texElement = new XElement("CocktailComponents");
-                    foreach (var Component in Cocktail.CocktailComponents)
+                    var compElement = new XElement("CocktailComponents");
+                    foreach (var component in cocktail.CocktailComponents)
                     {
-                        texElement.Add(new XElement("CocktailComponent",
-                        new XElement("Key", Component.Key),
-                        new XElement("Value", Component.Value)));
+                        compElement.Add(new XElement("CocktailComponent",
+                        new XElement("Key", component.Key),
+                        new XElement("Value", component.Value)));
                     }
                     xElement.Add(new XElement("Cocktail",
-                     new XAttribute("Id", Cocktail.Id),
-                     new XElement("CocktailName", Cocktail.CocktailName),
-                     new XElement("Price", Cocktail.Price),
-                     texElement));
+                     new XAttribute("Id", cocktail.Id),
+                     new XElement("CocktailName", cocktail.CocktailName),
+                     new XElement("Price", cocktail.Price),
+                     compElement));
                 }
                 var xDocument = new XDocument(xElement);
                 xDocument.Save(CocktailFileName);
@@ -250,11 +302,11 @@ namespace AbstractBarFileImplement
                 foreach (var warehouse in Warehouses)
                 {
                     var warehouseElement = new XElement("WarehouseComponents");
-                    foreach (var Component in warehouse.WarehouseComponents)
+                    foreach (var textile in warehouse.WarehouseComponents)
                     {
-                        warehouseElement.Add(new XElement("WarehouseComponent",
-                            new XElement("Key", Component.Key),
-                            new XElement("Value", Component.Value)));
+                        warehouseElement.Add(new XElement("WarehouseTextile",
+                            new XElement("Key", textile.Key),
+                            new XElement("Value", textile.Value)));
                     }
                     xElement.Add(new XElement("Warehouse",
                         new XAttribute("Id", warehouse.Id),
@@ -266,6 +318,15 @@ namespace AbstractBarFileImplement
                 var xDocument = new XDocument(xElement);
                 xDocument.Save(WarehouseFileName);
             }
+        }
+        public static void Save()
+        {
+            instance.SaveOrders();
+            instance.SaveCocktails();
+            instance.SaveComponents();
+            instance.SaveClients();
+            instance.SaveImplementers();
+            instance.SaveWarehouses();
         }
     }
 }

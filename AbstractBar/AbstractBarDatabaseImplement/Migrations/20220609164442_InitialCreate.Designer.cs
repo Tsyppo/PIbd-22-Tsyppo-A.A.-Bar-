@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AbstractBarDatabaseImplement.Migrations
 {
     [DbContext(typeof(AbstractBarDatabase))]
-    [Migration("20220518074233_InitialCreate")]
+    [Migration("20220609164442_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace AbstractBarDatabaseImplement.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.14")
+                .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Client", b =>
@@ -105,6 +105,28 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.ToTable("Components");
                 });
 
+            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Implementer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImplementerFIO")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PauseTime")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkingTime")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Implementers");
+                });
+
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -112,7 +134,7 @@ namespace AbstractBarDatabaseImplement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ClientId")
+                    b.Property<int>("ClientId")
                         .HasColumnType("int");
 
                     b.Property<int>("CocktailId")
@@ -127,6 +149,9 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.Property<DateTime?>("DateImplement")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ImplementerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -138,6 +163,8 @@ namespace AbstractBarDatabaseImplement.Migrations
                     b.HasIndex("ClientId");
 
                     b.HasIndex("CocktailId");
+
+                    b.HasIndex("ImplementerId");
 
                     b.ToTable("Orders");
                 });
@@ -211,9 +238,11 @@ namespace AbstractBarDatabaseImplement.Migrations
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Order", b =>
                 {
-                    b.HasOne("AbstractBarDatabaseImplement.Models.Client", null)
+                    b.HasOne("AbstractBarDatabaseImplement.Models.Client", "Client")
                         .WithMany("Orders")
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AbstractBarDatabaseImplement.Models.Cocktail", "Cocktail")
                         .WithMany("Orders")
@@ -221,13 +250,21 @@ namespace AbstractBarDatabaseImplement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AbstractBarDatabaseImplement.Models.Implementer", "Implementer")
+                        .WithMany("Orders")
+                        .HasForeignKey("ImplementerId");
+
+                    b.Navigation("Client");
+
                     b.Navigation("Cocktail");
+
+                    b.Navigation("Implementer");
                 });
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.WarehouseComponent", b =>
                 {
                     b.HasOne("AbstractBarDatabaseImplement.Models.Component", "Component")
-                        .WithMany("WarehouseComponents")
+                        .WithMany()
                         .HasForeignKey("ComponentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -258,8 +295,11 @@ namespace AbstractBarDatabaseImplement.Migrations
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Component", b =>
                 {
                     b.Navigation("CocktailComponents");
+                });
 
-                    b.Navigation("WarehouseComponents");
+            modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Implementer", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("AbstractBarDatabaseImplement.Models.Warehouse", b =>

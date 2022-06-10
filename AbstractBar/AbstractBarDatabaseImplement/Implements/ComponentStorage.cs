@@ -16,38 +16,7 @@ namespace AbstractBarDatabaseImplement.Implements
             return context.Components
             .Select(CreateModel)
             .ToList();
-
         }
-
-        public void Delete(ComponentBindingModel model)
-        {
-            using var context = new AbstractBarDatabase();
-            Component element = context.Components.FirstOrDefault(rec => rec.Id ==
-            model.Id);
-            if (element != null)
-            {
-                context.Components.Remove(element);
-                context.SaveChanges();
-            }
-            else
-            {
-                throw new Exception("Элемент не найден");
-            }
-        }
-
-        public ComponentViewModel GetElement(ComponentBindingModel model)
-        {
-            if (model == null)
-            {
-                return null;
-            }
-            using var context = new AbstractBarDatabase();
-            var Component = context.Components
-            .FirstOrDefault(rec => rec.ComponentName == model.ComponentName || rec.Id
-            == model.Id);
-            return Component != null ? CreateModel(Component) : null;
-        }
-
         public List<ComponentViewModel> GetFilteredList(ComponentBindingModel model)
         {
             if (model == null)
@@ -57,18 +26,27 @@ namespace AbstractBarDatabaseImplement.Implements
             using var context = new AbstractBarDatabase();
             return context.Components
             .Where(rec => rec.ComponentName.Contains(model.ComponentName))
-           .Select(CreateModel)
+            .Select(CreateModel)
             .ToList();
-
         }
-
+        public ComponentViewModel GetElement(ComponentBindingModel model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+            using var context = new AbstractBarDatabase();
+            var component = context.Components
+            .FirstOrDefault(rec => rec.ComponentName == model.ComponentName || rec.Id
+           == model.Id);
+            return component != null ? CreateModel(component) : null;
+        }
         public void Insert(ComponentBindingModel model)
         {
             using var context = new AbstractBarDatabase();
             context.Components.Add(CreateModel(model, new Component()));
             context.SaveChanges();
         }
-
         public void Update(ComponentBindingModel model)
         {
             using var context = new AbstractBarDatabase();
@@ -80,20 +58,33 @@ namespace AbstractBarDatabaseImplement.Implements
             CreateModel(model, element);
             context.SaveChanges();
         }
-
-        private static Component CreateModel(ComponentBindingModel model, Component
-Component)
+        public void Delete(ComponentBindingModel model)
         {
-            Component.ComponentName = model.ComponentName;
-            return Component;
+            using var context = new AbstractBarDatabase();
+            Component element = context.Components.FirstOrDefault(rec => rec.Id ==
+           model.Id);
+            if (element != null)
+            {
+                context.Components.Remove(element);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("Элемент не найден");
+            }
         }
-
-        private static ComponentViewModel CreateModel(Component Component)
+        private static Component CreateModel(ComponentBindingModel model, Component
+       component)
+        {
+            component.ComponentName = model.ComponentName;
+            return component;
+        }
+        private static ComponentViewModel CreateModel(Component component)
         {
             return new ComponentViewModel
             {
-                Id = Component.Id,
-                ComponentName = Component.ComponentName
+                Id = component.Id,
+                ComponentName = component.ComponentName
             };
         }
     }

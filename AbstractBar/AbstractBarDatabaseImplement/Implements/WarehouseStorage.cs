@@ -36,7 +36,6 @@ namespace AbstractBarDatabaseImplement.Implements
                     .Include(rec => rec.WarehouseComponents)
                     .ThenInclude(rec => rec.Component)
                     .FirstOrDefault(rec => rec.WarehouseName == model.WarehouseName || rec.Id == model.Id);
-
             return warehouse != null ? CreateModel(warehouse) : null;
         }
 
@@ -93,9 +92,9 @@ namespace AbstractBarDatabaseImplement.Implements
                 foreach (var warehouseComponent in Components)
                 {
                     int count = warehouseComponent.Value.Item2 * orderCount;
-                    IEnumerable<WarehouseComponent> warehouseComponents = context.WarehouseComponents
+                    IEnumerable<WarehouseComponent> WarehouseComponents = context.WarehouseComponents
                         .Where(warehouse => warehouse.ComponentId == warehouseComponent.Key);
-                    foreach (var Component in warehouseComponents)
+                    foreach (var Component in WarehouseComponents)
                     {
                         if (Component.Count <= count)
                         {
@@ -116,17 +115,16 @@ namespace AbstractBarDatabaseImplement.Implements
                     }
                     if (count != 0)
                     {
-                        throw new Exception("Недостаточно компонентов для передания заказа в работу");
+                        throw new Exception("Недостаточно тканей для передачи заказа в работу");
                     }
                 }
                 transaction.Commit();
                 return true;
-
             }
             catch
             {
                 transaction.Rollback();
-                throw;
+                return false;
             }
         }
 
@@ -198,6 +196,7 @@ namespace AbstractBarDatabaseImplement.Implements
 
             return warehouse;
         }
+
         private WarehouseViewModel CreateModel(Warehouse warehouse)
         {
             return new WarehouseViewModel

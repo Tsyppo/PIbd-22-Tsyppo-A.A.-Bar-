@@ -17,8 +17,8 @@ namespace AbstractBarContracts.BusinessLogicsContracts
         List<ReportTotalOrdersViewModel> GetTotalOrders();
         void SaveCocktailsToWordFile(ReportBindingModel model);
         void SaveWarehousesToWordFile(ReportBindingModel model);
-        void SaveCocktailComponentToExcelFile(ReportBindingModel model);
         void SaveWarehouseComponentToExcelFile(ReportBindingModel model);
+        void SaveCocktailComponentToExcelFile(ReportBindingModel model);
         void SaveOrdersToPdfFile(ReportBindingModel model);
         void SaveTotalOrdersToPdfFile(ReportBindingModel model);
     }

@@ -13,7 +13,5 @@ namespace AbstractBarDatabaseImplement.Models
         public string ComponentName { get; set; }
         [ForeignKey("ComponentId")]
         public virtual List<CocktailComponent> CocktailComponents { get; set; }
-        [ForeignKey("ComponentId")]
-        public virtual List<WarehouseComponent> WarehouseComponents { get; set; }
     }
 }

@@ -4,6 +4,8 @@ using Microsoft.Reporting.WinForms;
 using System;
 using System.IO;
 using System.Windows.Forms;
+
+
 namespace AbstractBarView
 {
     public partial class FormReportOrders : Form
@@ -27,7 +29,7 @@ namespace AbstractBarView
             Controls.Add(panel);
         }
 
-        private void buttonMake_Click(object sender, EventArgs e)
+        private void ButtonMake_Click(object sender, EventArgs e)
         {
             if (dateTimePickerFrom.Value.Date >= dateTimePickerTo.Value.Date)
             {
@@ -58,7 +60,7 @@ namespace AbstractBarView
             }
         }
 
-        private void buttonToPdf_Click(object sender, EventArgs e)
+        private void ButtonToPdf_Click(object sender, EventArgs e)
         {
             if (dateTimePickerFrom.Value.Date >= dateTimePickerTo.Value.Date)
             {

@@ -13,12 +13,13 @@ namespace AbstractBarDatabaseImplement
             }
             base.OnConfiguring(optionsBuilder);
         }
-        public virtual DbSet<Warehouse> Warehouses { get; set; }
-        public virtual DbSet<Client> Clients { get; set; }
-        public virtual DbSet<WarehouseComponent> WarehouseComponents { get; set; }
+        public virtual DbSet<Client> Clients { set; get; }
+        public virtual DbSet<Implementer> Implementers { set; get; }
         public virtual DbSet<Component> Components { set; get; }
         public virtual DbSet<Cocktail> Cocktails { set; get; }
         public virtual DbSet<CocktailComponent> CocktailComponents { set; get; }
         public virtual DbSet<Order> Orders { set; get; }
+        public virtual DbSet<Warehouse> Warehouses { set; get; }
+        public virtual DbSet<WarehouseComponent> WarehouseComponents { set; get; }
     }
 }

@@ -14,69 +14,82 @@ namespace AbstractBarListImplement.Implements
     public class CocktailStorage : ICocktailStorage
     {
         private readonly DataListSingleton source;
-
         public CocktailStorage()
         {
             source = DataListSingleton.GetInstance();
         }
-
-        private static Cocktail CreateModel(CocktailBindingModel model, Cocktail
-        Cocktail)
+        public List<CocktailViewModel> GetFullList()
         {
-            Cocktail.CocktailName = model.CocktailName;
-            Cocktail.Price = model.Price;
-            // удаляем убранные
-            foreach (var key in Cocktail.CocktailComponents.Keys.ToList())
+            var result = new List<CocktailViewModel>();
+            foreach (var component in source.Cocktails)
             {
-                if (!model.CocktailComponents.ContainsKey(key))
-                {
-                    Cocktail.CocktailComponents.Remove(key);
-                }
+                result.Add(CreateModel(component));
             }
-            // обновляем существуюущие и добавляем новые
-            foreach (var Component in model.CocktailComponents)
-            {
-                if (Cocktail.CocktailComponents.ContainsKey(Component.Key))
-                {
-                    Cocktail.CocktailComponents[Component.Key] =
-                    model.CocktailComponents[Component.Key].Item2;
-                }
-                else
-                {
-                    Cocktail.CocktailComponents.Add(Component.Key,
-                    model.CocktailComponents[Component.Key].Item2);
-                }
-            }
-            return Cocktail;
+            return result;
         }
-
-        private CocktailViewModel CreateModel(Cocktail Cocktail)
+        public List<CocktailViewModel> GetFilteredList(CocktailBindingModel model)
         {
-            // требуется дополнительно получить список тканей для швейного изделия с
-            // названиями и их количество
-            var CocktailComponents = new Dictionary<int, (string, int)>();
-            foreach (var gt in Cocktail.CocktailComponents)
+            if (model == null)
             {
-                string ComponentName = string.Empty;
-                foreach (var Component in source.Components)
-                {
-                    if (gt.Key == Component.Id)
-                    {
-                        ComponentName = Component.ComponentName;
-                        break;
-                    }
-                }
-                CocktailComponents.Add(gt.Key, (ComponentName, gt.Value));
+                return null;
             }
-            return new CocktailViewModel
+            var result = new List<CocktailViewModel>();
+            foreach (var cocktail in source.Cocktails)
             {
-                Id = Cocktail.Id,
-                CocktailName = Cocktail.CocktailName,
-                Price = Cocktail.Price,
-                CocktailComponents = CocktailComponents
+                if (cocktail.CocktailName.Contains(model.CocktailName))
+                {
+                    result.Add(CreateModel(cocktail));
+                }
+            }
+            return result;
+        }
+        public CocktailViewModel GetElement(CocktailBindingModel model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+            foreach (var cocktail in source.Cocktails)
+            {
+                if (cocktail.Id == model.Id || cocktail.CocktailName == model.CocktailName)
+                {
+                    return CreateModel(cocktail);
+                }
+            }
+            return null;
+        }
+        public void Insert(CocktailBindingModel model)
+        {
+            var tempCocktail = new Cocktail
+            {
+                Id = 1,
+                CocktailComponents = new Dictionary<int, int>()
             };
+            foreach (var cocktail in source.Cocktails)
+            {
+                if (cocktail.Id >= tempCocktail.Id)
+                {
+                    tempCocktail.Id = cocktail.Id + 1;
+                }
+            }
+            source.Cocktails.Add(CreateModel(model, tempCocktail));
         }
-
+        public void Update(CocktailBindingModel model)
+        {
+            Cocktail tempCocktail = null;
+            foreach (var cocktail in source.Cocktails)
+            {
+                if (cocktail.Id == model.Id)
+                {
+                    tempCocktail = cocktail;
+                }
+            }
+            if (tempCocktail == null)
+            {
+                throw new Exception("Элемент не найден");
+            }
+            CreateModel(model, tempCocktail);
+        }
         public void Delete(CocktailBindingModel model)
         {
             for (int i = 0; i < source.Cocktails.Count; ++i)
@@ -88,89 +101,59 @@ namespace AbstractBarListImplement.Implements
                 }
             }
             throw new Exception("Элемент не найден");
-
         }
-
-        public CocktailViewModel GetElement(CocktailBindingModel model)
+        private static Cocktail CreateModel(CocktailBindingModel model, Cocktail cocktail)
         {
-            if (model == null)
+            cocktail.CocktailName = model.CocktailName;
+            cocktail.Price = model.Price;
+            // удаляем убранные
+            foreach (var key in cocktail.CocktailComponents.Keys.ToList())
             {
-                return null;
-            }
-            foreach (var Cocktail in source.Cocktails)
-            {
-                if (Cocktail.Id == model.Id || Cocktail.CocktailName ==
-                model.CocktailName)
+                if (!model.CocktailComponents.ContainsKey(key))
                 {
-                    return CreateModel(Cocktail);
+                    cocktail.CocktailComponents.Remove(key);
                 }
             }
-            return null;
-
-        }
-
-        public List<CocktailViewModel> GetFilteredList(CocktailBindingModel model)
-        {
-            if (model == null)
+            // обновляем существуюущие и добавляем новые
+            foreach (var component in model.CocktailComponents)
             {
-                return null;
-            }
-
-            var result = new List<CocktailViewModel>();
-            foreach (var Cocktail in source.Cocktails)
-            {
-                if (Cocktail.CocktailName.Contains(model.CocktailName))
+                if (cocktail.CocktailComponents.ContainsKey(component.Key))
                 {
-                    result.Add(CreateModel(Cocktail));
+                    cocktail.CocktailComponents[component.Key] =
+                    model.CocktailComponents[component.Key].Item2;
+                }
+                else
+                {
+                    cocktail.CocktailComponents.Add(component.Key,
+                    model.CocktailComponents[component.Key].Item2);
                 }
             }
-            return result;
+            return cocktail;
         }
-
-        public List<CocktailViewModel> GetFullList()
+        private CocktailViewModel CreateModel(Cocktail cocktail)
         {
-            var result = new List<CocktailViewModel>();
-
-            foreach (var Cocktail in source.Cocktails)
+            // требуется дополнительно получить список компонентов для изделия с названиями и их количество
+            var cocktailComponents = new Dictionary<int, (string, int)>();
+            foreach (var pc in cocktail.CocktailComponents)
             {
-                result.Add(CreateModel(Cocktail));
+                string componentName = string.Empty;
+                foreach (var component in source.Components)
+                {
+                if (pc.Key == component.Id)
+                    {
+                        componentName = component.ComponentName;
+                        break;
+                    }
+                }
+                cocktailComponents.Add(pc.Key, (componentName, pc.Value));
             }
-            return result;
-        }
-
-        public void Insert(CocktailBindingModel model)
-        {
-            var tempCocktail = new Cocktail
+            return new CocktailViewModel
             {
-                Id = 1,
-                CocktailComponents = new Dictionary<int, int>()
+                Id = cocktail.Id,
+                CocktailName = cocktail.CocktailName,
+                Price = cocktail.Price,
+                CocktailComponents = cocktailComponents
             };
-            foreach (var Cocktail in source.Cocktails)
-            {
-                if (Cocktail.Id >= tempCocktail.Id)
-                {
-                    tempCocktail.Id = Cocktail.Id + 1;
-                }
-            }
-            source.Cocktails.Add(CreateModel(model, tempCocktail));
-        }
-
-        public void Update(CocktailBindingModel model)
-        {
-            Cocktail tempCocktail = null;
-            foreach (var Cocktail in source.Cocktails)
-            {
-                if (Cocktail.Id == model.Id)
-                {
-                    tempCocktail = Cocktail;
-                }
-            }
-            if (tempCocktail == null)
-            {
-                throw new Exception("Элемент не найден");
-            }
-            CreateModel(model, tempCocktail);
-
         }
     }
 }

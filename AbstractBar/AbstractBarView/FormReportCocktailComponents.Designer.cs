@@ -28,70 +28,67 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.Cocktail = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Component = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonSaveToExcel = new System.Windows.Forms.Button();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridView
-            // 
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Cocktail,
-            this.Component,
-            this.Count});
-            this.dataGridView.Location = new System.Drawing.Point(9, 9);
-            this.dataGridView.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.RowHeadersWidth = 62;
-            this.dataGridView.RowTemplate.Height = 33;
-            this.dataGridView.Size = new System.Drawing.Size(620, 294);
-            this.dataGridView.TabIndex = 0;
-            // 
-            // Cocktail
-            // 
-            this.Cocktail.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Cocktail.HeaderText = "Изделие";
-            this.Cocktail.MinimumWidth = 8;
-            this.Cocktail.Name = "Cocktail";
-            // 
-            // Component
-            // 
-            this.Component.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Component.HeaderText = "Компонент";
-            this.Component.MinimumWidth = 8;
-            this.Component.Name = "Component";
-            // 
-            // Count
-            // 
-            this.Count.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Count.HeaderText = "Количество";
-            this.Count.MinimumWidth = 8;
-            this.Count.Name = "Count";
-            // 
             // buttonSaveToExcel
             // 
-            this.buttonSaveToExcel.Location = new System.Drawing.Point(459, 309);
-            this.buttonSaveToExcel.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonSaveToExcel.Location = new System.Drawing.Point(12, 12);
             this.buttonSaveToExcel.Name = "buttonSaveToExcel";
-            this.buttonSaveToExcel.Size = new System.Drawing.Size(170, 39);
-            this.buttonSaveToExcel.TabIndex = 1;
+            this.buttonSaveToExcel.Size = new System.Drawing.Size(160, 29);
+            this.buttonSaveToExcel.TabIndex = 0;
             this.buttonSaveToExcel.Text = "Сохранить в Excel";
             this.buttonSaveToExcel.UseVisualStyleBackColor = true;
             this.buttonSaveToExcel.Click += new System.EventHandler(this.buttonSaveToExcel_Click);
+            // 
+            // dataGridView
+            // 
+            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.Column2,
+            this.Column3});
+            this.dataGridView.Location = new System.Drawing.Point(1, 47);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowHeadersWidth = 51;
+            this.dataGridView.RowTemplate.Height = 29;
+            this.dataGridView.Size = new System.Drawing.Size(799, 404);
+            this.dataGridView.TabIndex = 1;
+            // 
+            // Column1
+            // 
+            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column1.HeaderText = "Коктейль";
+            this.Column1.MinimumWidth = 6;
+            this.Column1.Name = "Column1";
+            // 
+            // Column2
+            // 
+            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column2.HeaderText = "Компонент";
+            this.Column2.MinimumWidth = 6;
+            this.Column2.Name = "Column2";
+            // 
+            // Column3
+            // 
+            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column3.HeaderText = "Количество";
+            this.Column3.MinimumWidth = 6;
+            this.Column3.Name = "Column3";
             // 
             // FormReportCocktailComponents
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(640, 360);
-            this.Controls.Add(this.buttonSaveToExcel);
+            this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.dataGridView);
-            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.Controls.Add(this.buttonSaveToExcel);
             this.Name = "FormReportCocktailComponents";
             this.Text = "Компоненты по изделиям";
             this.Load += new System.EventHandler(this.FormReportCocktailComponents_Load);
@@ -102,10 +99,10 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button buttonSaveToExcel;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Cocktail;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Component;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Count;
+        private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
     }
 }
