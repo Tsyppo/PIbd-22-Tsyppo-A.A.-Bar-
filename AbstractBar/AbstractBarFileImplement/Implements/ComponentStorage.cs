@@ -12,7 +12,6 @@ namespace AbstractBarFileImplement.Implements
     public class ComponentStorage : IComponentStorage
     {
         private readonly FileDataListSingleton source;
-
         public ComponentStorage()
         {
             source = FileDataListSingleton.GetInstance();
@@ -20,8 +19,8 @@ namespace AbstractBarFileImplement.Implements
         public List<ComponentViewModel> GetFullList()
         {
             return source.Components
-                .Select(CreateModel)
-                .ToList();
+            .Select(CreateModel)
+           .ToList();
         }
         public List<ComponentViewModel> GetFilteredList(ComponentBindingModel model)
         {
@@ -30,29 +29,26 @@ namespace AbstractBarFileImplement.Implements
                 return null;
             }
             return source.Components
-                .Where(rec => rec.ComponentName.Contains(model.ComponentName))
-                .Select(CreateModel)
-                .ToList();
+            .Where(rec => rec.ComponentName.Contains(model.ComponentName))
+           .Select(CreateModel)
+           .ToList();
         }
-
         public ComponentViewModel GetElement(ComponentBindingModel model)
         {
             if (model == null)
             {
                 return null;
             }
-            var Component = source.Components
-                .FirstOrDefault(rec => rec.ComponentName == model.ComponentName || rec.Id == model.Id);
-            return Component != null ? CreateModel(Component) : null;
+            var component = source.Components
+            .FirstOrDefault(rec => rec.ComponentName == model.ComponentName || rec.Id == model.Id);
+            return component != null ? CreateModel(component) : null;
         }
-
         public void Insert(ComponentBindingModel model)
         {
             int maxId = source.Components.Count > 0 ? source.Components.Max(rec => rec.Id) : 0;
             var element = new Component { Id = maxId + 1 };
             source.Components.Add(CreateModel(model, element));
         }
-
         public void Update(ComponentBindingModel model)
         {
             var element = source.Components.FirstOrDefault(rec => rec.Id == model.Id);
@@ -62,7 +58,6 @@ namespace AbstractBarFileImplement.Implements
             }
             CreateModel(model, element);
         }
-
         public void Delete(ComponentBindingModel model)
         {
             Component element = source.Components.FirstOrDefault(rec => rec.Id == model.Id);
@@ -75,19 +70,18 @@ namespace AbstractBarFileImplement.Implements
                 throw new Exception("Элемент не найден");
             }
         }
-
-        private static Component CreateModel(ComponentBindingModel model, Component Component)
+        private static Component CreateModel(ComponentBindingModel model, Component
+       component)
         {
-            Component.ComponentName = model.ComponentName;
-            return Component;
+            component.ComponentName = model.ComponentName;
+            return component;
         }
-
-        private static ComponentViewModel CreateModel(Component Component)
+        private ComponentViewModel CreateModel(Component component)
         {
             return new ComponentViewModel
             {
-                Id = Component.Id,
-                ComponentName = Component.ComponentName
+                Id = component.Id,
+                ComponentName = component.ComponentName
             };
         }
     }

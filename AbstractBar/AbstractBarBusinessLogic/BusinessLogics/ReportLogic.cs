@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AbstractBarBusinessLogic.OfficePackage;
 using AbstractBarBusinessLogic.OfficePackage.HelperModels;
 using AbstractBarContracts.BindingModels;
@@ -82,7 +84,7 @@ namespace AbstractBarBusinessLogic.BusinessLogics
             .ToList();
         }
 
-        // Сохранение коктейлей в файл-Word
+        // Сохранение швейных изделий в файл-Word
         public void SaveCocktailsToWordFile(ReportBindingModel model)
         {
             _saveToWord.CreateDoc(new WordInfo
@@ -99,7 +101,7 @@ namespace AbstractBarBusinessLogic.BusinessLogics
             _saveToExcel.CreateReport(new ExcelInfo
             {
                 FileName = model.FileName,
-                Title = "Список тканей",
+                Title = "Список компонентов",
                 CocktailComponents = GetCocktailComponent()
             });
         }
@@ -144,7 +146,7 @@ namespace AbstractBarBusinessLogic.BusinessLogics
             _saveToExcel.CreateWarehouseReport(new ExcelInfoWarehouses
             {
                 FileName = model.FileName,
-                Title = "Список тканей складов",
+                Title = "Список компонентов складов",
                 WarehouseComponents = GetWarehouseComponents()
             });
         }

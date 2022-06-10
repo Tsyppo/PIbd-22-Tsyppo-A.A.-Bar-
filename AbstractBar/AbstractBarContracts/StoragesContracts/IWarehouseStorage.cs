@@ -13,6 +13,6 @@ namespace AbstractBarContracts.StoragesContracts
         void Insert(WarehouseBindingModel model);
         void Update(WarehouseBindingModel model);
         void Delete(WarehouseBindingModel model);
-        bool TakeComponentFromWarehouse(Dictionary<int, (string, int)> Components, int orderCount);
+        bool TakeComponentFromWarehouse(Dictionary<int, (string, int)> components, int orderCount);
     }
 }

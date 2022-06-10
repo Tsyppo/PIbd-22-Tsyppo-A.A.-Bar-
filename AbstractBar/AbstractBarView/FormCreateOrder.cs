@@ -18,24 +18,34 @@ namespace AbstractBarView
     {
         private readonly ICocktailLogic _logicC;
         private readonly IOrderLogic _logicO;
-        public FormCreateOrder(ICocktailLogic logicC, IOrderLogic logicO)
+        private readonly IClientLogic _logicCl;
+        public FormCreateOrder(ICocktailLogic logicC, IOrderLogic logicO, IClientLogic logicCl)
         {
             InitializeComponent();
             _logicC = logicC;
             _logicO = logicO;
+            _logicCl = logicCl;
         }
 
         private void FormCreateOrder_Load(object sender, EventArgs e)
         {
             try
             {
-                List<CocktailViewModel> list = _logicC.Read(null);
-                if (list != null)
+                List<CocktailViewModel> listC = _logicC.Read(null);
+                List<ClientViewModel> listCl = _logicCl.Read(null);
+                if (listC != null)
                 {
                     comboBoxCocktail.DisplayMember = "CocktailName";
                     comboBoxCocktail.ValueMember = "Id";
-                    comboBoxCocktail.DataSource = list;
+                    comboBoxCocktail.DataSource = listC;
                     comboBoxCocktail.SelectedItem = null;
+                }
+                if (listCl != null)
+                {
+                    comboBoxClient.DataSource = listCl;
+                    comboBoxClient.DisplayMember = "ClientFIO";
+                    comboBoxClient.ValueMember = "Id";
+                    comboBoxClient.SelectedItem = null;
                 }
             }
             catch (Exception ex)
@@ -83,11 +93,19 @@ namespace AbstractBarView
                MessageBoxIcon.Error);
                 return;
             }
+            if (comboBoxClient.SelectedValue == null)
+            {
+                MessageBox.Show("Выберите клиента", "Ошибка", MessageBoxButtons.OK,
+               MessageBoxIcon.Error);
+                return;
+            }
             try
             {
                 _logicO.CreateOrder(new CreateOrderBindingModel
                 {
                     CocktailId = Convert.ToInt32(comboBoxCocktail.SelectedValue),
+                    ImplementerId = Convert.ToInt32(comboBoxClient.SelectedValue),
+                    ClientId = Convert.ToInt32(comboBoxClient.SelectedValue),
                     Count = Convert.ToInt32(textBoxCount.Text),
                     Sum = Convert.ToDecimal(textBoxSum.Text)
                 });

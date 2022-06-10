@@ -112,7 +112,7 @@ namespace AbstractBarListImplement.Implements
         }
         private WarehouseViewModel CreateModel(Warehouse warehouse)
         {
-            var warehouseComponents = new Dictionary<int, (string, int)>();
+            var WarehouseComponents = new Dictionary<int, (string, int)>();
             foreach (var warehouseComponent in warehouse.WarehouseComponents)
             {
                 string ComponentName = string.Empty;
@@ -124,7 +124,7 @@ namespace AbstractBarListImplement.Implements
                         break;
                     }
                 }
-                warehouseComponents.Add(warehouseComponent.Key, (ComponentName, warehouseComponent.Value));
+                WarehouseComponents.Add(warehouseComponent.Key, (ComponentName, warehouseComponent.Value));
             }
             return new WarehouseViewModel
             {
@@ -132,7 +132,7 @@ namespace AbstractBarListImplement.Implements
                 WarehouseName = warehouse.WarehouseName,
                 ResponsiblePerson = warehouse.ResponsiblePerson,
                 DateCreate = warehouse.DateCreate,
-                WarehouseComponents = warehouseComponents
+                WarehouseComponents = WarehouseComponents
             };
         }
 
